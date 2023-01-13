@@ -8,8 +8,6 @@ const filePath = "./data/test-extraction-data.json";
 // Variables
 const lat = 44.58857;  // Lakehead Orillia latitude
 const lng = -79.415588;  // Lakehead Orillia longitude
-const storeId = "0580";  // Orillia
-const storeBanner = "zehrs"; 
 const category = "preparedMeals";
 const timeBetweenRequests = 5000;  // Time between requests in milliseconds (so I don't get IP banned by Galen Weston Jr.)
 const closestStore = getClosestStore(lat, lng, storeLocations);
@@ -57,7 +55,7 @@ const getProducts = async (page = 0) => {
 const getProductsForCategory = async () => {
   let page = 0;
   let products = [];
-  
+
   const { results, pagination } = await getProducts(page);
   console.log(`Total products: ${pagination.totalResults}`)
   products = products.concat(results);
