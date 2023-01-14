@@ -1,21 +1,3 @@
-const catagories = {
-  food: "27985",          // Seems to just list random items (limit 10000)
-  preparedMeals: "27996",
-  meat: "27998",
-  fishAndSeafood: "27999",
-  fruitsAndVegetables: "28000",
-  deli: "28001",
-  bakery: "28002",
-  dairyAndEggs: "28003",
-  drinks: "28004",
-  frozen: "28005",
-  pantry: "28006",
-  naturalFoods: "28189",
-  beerAndWine: "28236",
-  snacksChipsAndCandy: "57025",
-  internationalFoods: "58044",
-};
-
 const distanceBetweenCoords = (lat1, lon1, lat2, lon2, unit) => {
   var radlat1 = Math.PI * lat1/180
   var radlat2 = Math.PI * lat2/180
@@ -33,19 +15,25 @@ const distanceBetweenCoords = (lat1, lon1, lat2, lon2, unit) => {
   return dist;
 };
 
-const getClosestStore = (lat, lng, stores) => {
+const getClosestStore = (userLat, userLng, stores) => {
   let closestStore = null;
   let closestDistance = Infinity;
 
   for (const store of stores) {
-    const distance = distanceBetweenCoords(lat, lng, store.geoPoint.latitude, store.geoPoint.longitude, "K");
+    const distance = distanceBetweenCoords(userLat, userLng, store.geoPoint.latitude, store.geoPoint.longitude, "K");
     if (distance < closestDistance) {
       closestDistance = distance;
       closestStore = store;
     }
   }
 
-  console.log(`Closest store is a ${closestStore.storeBannerId} in ${closestStore.name} at ${closestDistance}km away`);
+  // properties of Loblaws stores
+  if (closestStore.storeBannerId && closestStore.name) {
+    console.log(`Closest store is a ${closestStore.storeBannerId} in ${closestStore.name} at ${closestDistance}km away`);
+  } else {
+    console.log(`Closest store is ${closestDistance}km away`);
+  }
+
   return closestStore;
 };
 
