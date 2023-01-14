@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { catagories, getClosestStore } = require("./common");
-const { storeLocations } = require("./data/loblaws-store-locations");
+const { storeLocations } = require("./data/loblaws-locations-canada");
 const filePath = "./data/test-extraction-data.json";
 
 
