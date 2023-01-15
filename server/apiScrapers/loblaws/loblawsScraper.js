@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { getClosestStore } = require("../common");
 const { catagories, storeLocations } = require("./data");
-const filePath = "./data/test-extraction-data.json";
+const filePath = "./test-extraction-data.json";
 
 
 // Variables
