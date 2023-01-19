@@ -4,15 +4,14 @@ import { getFirestore } from 'firebase/firestore';
 
 
 // Your web app's Firebase configuration
-// TODO: add config
 const firebaseConfig = {
-	apiKey: "",
-	authDomain: "",
-	projectId: "",
-	storageBucket: "",
-	messagingSenderId: "",
-	appId: "",
-	measurementId: ""
+	apiKey: "AIzaSyCtun0uIHcDXHNVbtHCMDRlj7syvFd-PQs",
+	authDomain: "groceriez-44935.firebaseapp.com",
+	projectId: "groceriez-44935",
+	storageBucket: "groceriez-44935.appspot.com",
+	messagingSenderId: "406004418418",
+	appId: "1:406004418418:web:8b2789d2b9656f8670bfeb",
+	measurementId: "G-R6TEF0YV91"
 };
 
 // Initialize Firebase
