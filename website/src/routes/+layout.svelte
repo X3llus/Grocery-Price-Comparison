@@ -6,6 +6,7 @@
 	var sideOpen = false;
 
 	function change_address() {
+		// TODO: Change address
 		console.log('change address');
 	}
 </script>
@@ -48,7 +49,7 @@
 				on:keypress={change_address}
 			>
 				<div class="flex flex-col-reverse"><MapMarker width={22} height={22} /></div>
-				68 Dunlop Street
+				Random Address
 			</div>
 		</div>
 	</div>
