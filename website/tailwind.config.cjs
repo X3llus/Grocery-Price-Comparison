@@ -9,7 +9,7 @@ module.exports = {
         'accent': '#3686C9',
         'background': '#E0E2D2',
         'rich-black': '#0A1D29',
-        'dark-khaki': '#C3C786',
+        'dark-khaki': '#C3C786'
       },
     },
   },
