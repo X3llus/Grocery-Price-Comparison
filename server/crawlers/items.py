@@ -4,9 +4,16 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+from scrapy.item import Field
 
 
-class CrawlersItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ProductItem(scrapy.Item):
+    name = Field()
+    brand = Field()
+    imageUrl = Field()
+    packageSize = Field()
+    price = Field()
+    normalizedPrice = Field()
+    dateExtracted = Field()
+    
+    
