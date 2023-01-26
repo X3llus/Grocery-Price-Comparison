@@ -5,3 +5,5 @@ Flask==2.2.2
 pytest==7.2.1
 aiohttp==3.8.3
 aiolimiter==1.0.0
+# Added firebase-admin - used to communicate with firebase
+firebase-admin==6.0.1
