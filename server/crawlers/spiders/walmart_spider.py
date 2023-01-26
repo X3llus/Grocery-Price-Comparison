@@ -1,6 +1,7 @@
-import datetime
 import scrapy
 import json
+from datetime import datetime
+from scrapy.http.request.json_request import JsonRequest
 from crawlers.data import walmart_categories
 from crawlers.items import ProductItem
 from crawlers.utils import format_base_product, get_price_request_body, trim_price_response
@@ -34,31 +35,31 @@ class WalmartSpider(scrapy.Spider):
     json_response = json.loads(response.text)
     totalResults = json_response['pagination']['totalResults']
     pageSize = json_response['pagination']['pageSize']
-    products = [format_base_product(p) for p in json_response['items']['products']]
+    products = [format_base_product(p) for p in list(json_response['items']['products'].values())]
     productsToFetch = json_response['items']['productsToFetch']
     
     data = { 'lang': 'en', 'products': productsToFetch }
-    additionalProducts = scrapy.JsonRequest(url='https://www.walmart.ca/api/bsp/fetch-products?experience=grocery', method='POST', data=data, callback=self.parse_additional_products)
-    products.extend(additionalProducts)
-    
-    data = get_price_request_body(products, self.storeId) 
-    yield scrapy.JsonRequest(url='https://www.walmart.ca/api/bsp/v2/price-offer', method='POST', data=data, callback=self.parse_price, cb_kwargs=dict(products=products))
+    yield JsonRequest(url='https://www.walmart.ca/api/bsp/fetch-products?experience=grocery', method='POST', data=data, callback=self.parse_additional_products, cb_kwargs=dict(products=products))
 
     maxPage = totalResults // pageSize
-    for page in range(2, maxPage):
+    for page in range(2, maxPage + 1):
+      print(f'Fetching page {page} of {maxPage} ({round(page / maxPage * 100, 2)}%)')
       url = f'https://www.walmart.ca/api/bsp/browse?experience=grocery&lang=en&c={walmart_categories[self.category]}&p={page}'
       yield scrapy.Request(url, self.parse)
     
   
-  def parse_additional_products(self, response):
+  def parse_additional_products(self, response, products):
     json_response = json.loads(response.text)
-    products = json_response['products']
-    return [format_base_product(p) for p in products]
+    additionalProducts = [format_base_product(p) for p in list(json_response['products'].values())]
+    products.extend(additionalProducts)
+    
+    priceRequestData = get_price_request_body(products, self.storeId)
+    yield JsonRequest(url='https://www.walmart.ca/api/bsp/v2/price-offer', method='POST', data=priceRequestData, callback=self.parse_price, cb_kwargs=dict(products=products))
   
   
   def parse_price(self, response, products):
     json_response = json.loads(response.text)
-    prices = [trim_price_response(p) for p in json_response['offers']]
+    prices = [trim_price_response(p) for p in list(json_response['offers'].values())]
     
     for product in products:
       sku = product['skuIds'][0]

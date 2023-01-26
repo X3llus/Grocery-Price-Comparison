@@ -21,12 +21,10 @@ def format_base_product(product: Dict) -> Dict:
   packageSize = product.get('description', "")
   
   try:
-    image_url = product.get('skus', [{}])[0].get('images', [{}])[0].get('thumbnail', {}).get('url', "")
-  except:
-    image_url = None
-  
-  try:
-    brand = product.get('skus', [{}])[0].get('brand', {}).get('name', "")
+    skusObj = product.get('skus')
+    firstSku = skusObj[sku[0]]
+    brand = firstSku.get('brand', {}).get('name', "")
+    image_url = firstSku.get('images', [{}])[0].get('thumbnail', {}).get('url', "")
   except:
     brand = None
     
@@ -61,13 +59,15 @@ def get_price_request_body(products: list[Dict], storeId) -> Dict:
   
 
 def trim_price_response(response: Dict) -> Dict:
-  value = response['pricePerUnit']
-  quantity = response['priceCompQty']
-  unit = response['priceCompUomCd']
+  value = response.get('pricePerUnit', None)
+  quantity = response.get('priceCompQty', None)
+  unit = response.get('priceCompUomCd', None)
+  sku = response.get('offerId', None)
+  price = response.get('currentPrice', None)
   
   return {
-    'sku': response['offerId'],
-    'price': response['currentPrice'],
+    'sku': sku,
+    'price': price,
     'normalizedPrice': {
       'value': value,
       'quantity': quantity,
