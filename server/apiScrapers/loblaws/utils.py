@@ -74,7 +74,6 @@ def format_product(product: Dict, store_id: str) -> Dict:
         'quantity': quantity,
         'unit': size_unit
     },
-    'inStock': product.get('stockStatus', "") == "OK",
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
   

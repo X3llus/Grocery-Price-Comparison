@@ -61,7 +61,7 @@ async def get_products_for_category(session, category, all_products) -> Dict:
     page += 1
     data = await get_products(session, category, page)
     print(f"Fetching {category}. {len(products) + 48} / {data['pagination']['totalResults']} products fetched")
-    formatted_products = [format_product(product, closest_store['id']) for product in data['results']]
+    formatted_products = [format_product(product, closest_store['id']) for product in data['results'] if product['stockStatus'] == "OK"]
     products += formatted_products
 
   print(f"{category} complete. {len(products)} products fetched")
