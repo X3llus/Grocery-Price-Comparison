@@ -11,4 +11,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # db.collection().add({}) mock code for adding documents to the database
-print(get_all_products)
+# def store_data(collection_id, data):
+#     db.collection(collection_id).add(data)
+
+# store_data(collection_id = "Store", data = data.store_locations)
