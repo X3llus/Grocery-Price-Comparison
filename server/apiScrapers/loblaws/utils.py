@@ -1,5 +1,5 @@
 import math
-from typing import Dict
+from typing import Dict, List
 from datetime import datetime
 
 def distance_between_coords(lat1, lon1, lat2, lon2, unit):
@@ -42,7 +42,7 @@ def get_closest_store(user_lat, user_lng, stores):
   return closest_store
 
 
-def format_product(product: Dict, store_id: str) -> Dict:
+def format_product(product: Dict) -> Dict:
   try:
     price = product.get('prices', {}).get('price', {}).get('value', 0)
   except:
@@ -63,7 +63,6 @@ def format_product(product: Dict, store_id: str) -> Dict:
     quantity = 1
     
   return {
-    'storeId': store_id,
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': image_url,
@@ -74,6 +73,7 @@ def format_product(product: Dict, store_id: str) -> Dict:
         'quantity': quantity,
         'unit': size_unit
     },
+    'SKU': product.get('code', ""),
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
   
@@ -91,4 +91,13 @@ def format_base_product(product: Dict) -> Dict:
     'packageSize': product.get('packageSize', ""),
     'SKU': product.get('code', "")
   }
+
   
+def get_unique_products(all_products: Dict, new_products: List) -> List:
+  existing_skus = []
+  categories = list(all_products.keys())
+  for category in categories:
+    for product in all_products[category]:
+      existing_skus.append(product['SKU'])
+  
+  return [x for x in new_products if x['SKU'] not in existing_skus]

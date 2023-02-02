@@ -6,7 +6,7 @@ import aiohttp
 from aiolimiter import AsyncLimiter
 
 from data import categories, store_locations
-from utils import get_closest_store, format_product
+from utils import get_closest_store, format_product, get_unique_products
 
 
 # The Orillia Zehrs
@@ -54,15 +54,15 @@ async def get_products_for_category(session, category, all_products) -> Dict:
 
   data = await get_products(session, category, page)
   print(f"Fetching {category}. Total products: {data['pagination']['totalResults']}")
-  formatted_products = [format_product(product, closest_store['id']) for product in data['results']]
+  formatted_products = [format_product(product) for product in data['results']]
   products += formatted_products
 
   while len(products) < data['pagination']['totalResults']:
     page += 1
     data = await get_products(session, category, page)
     print(f"Fetching {category}. {len(products) + 48} / {data['pagination']['totalResults']} products fetched")
-    formatted_products = [format_product(product, closest_store['id']) for product in data['results'] if product['stockStatus'] == "OK"]
-    products += formatted_products
+    formatted_products = [format_product(product) for product in data['results'] if product['stockStatus'] == "OK"]
+    products += get_unique_products(formatted_products)
 
   print(f"{category} complete. {len(products)} products fetched")
   all_products[category] = products
