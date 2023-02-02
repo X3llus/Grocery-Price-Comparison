@@ -30,7 +30,7 @@ def format_base_product(product: Dict) -> Dict:
     
   return {
     'productId': id,
-    'skuIds': sku,
+    'SKU': sku,
     'name': name,
     'brand': brand,
     'imageUrl': image_url,
@@ -43,7 +43,7 @@ def get_price_request_body(products: list[Dict], storeId) -> Dict:
   for product in products:
     productIds.append({
       'productId': product['productId'],
-      'skuIds': product['skuIds']
+      'skuIds': product['SKU']
     })
     
   fsa = get_store_fsa(storeId, store_locations)

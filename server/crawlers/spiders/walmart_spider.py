@@ -66,7 +66,10 @@ class WalmartSpider(scrapy.Spider):
     prices = [trim_price_response(p) for p in list(json_response['offers'].values())]
     
     for product in products:
-      sku = product['skuIds'][0]
+      if len(product['SKU']) == 0:
+        sku = 'N/A'
+      else:
+        sku = product['SKU'][0]
       price = next((p for p in prices if p['sku'] == sku), None)
       if price is not None:
         productData = {
@@ -77,6 +80,7 @@ class WalmartSpider(scrapy.Spider):
           'packageSize': product['packageSize'],
           'price': price['price'],
           'normalizedPrice': price['normalizedPrice'],
+          'SKU': sku,
           'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         }
         try:

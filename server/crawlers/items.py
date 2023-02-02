@@ -16,5 +16,6 @@ class ProductItem(scrapy.Item):
     price = Field()
     normalizedPrice = Field()
     dateExtracted = Field()
+    SKU = Field()
     
     
