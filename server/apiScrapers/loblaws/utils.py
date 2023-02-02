@@ -77,3 +77,18 @@ def format_product(product: Dict, store_id: str) -> Dict:
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
   
+  
+def format_base_product(product: Dict) -> Dict:
+  try:
+    image_url = product.get('imageAssets', [{}])[0].get('mediumUrl', "")
+  except:
+    image_url = None
+    
+  return {
+    'name': product.get('name', ""),
+    'brand': product.get('brand', ""),
+    'imageUrl': image_url,
+    'packageSize': product.get('packageSize', ""),
+    'SKU': product.get('code', "")
+  }
+  
