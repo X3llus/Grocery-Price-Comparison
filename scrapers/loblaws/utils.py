@@ -80,6 +80,7 @@ def format_product_price(product: Dict) -> Dict:
         'unit': size_unit
     },
     'SKU': product.get('code', ""),
+    'lastUpdated': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
   }
   
   
