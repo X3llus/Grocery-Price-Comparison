@@ -6,3 +6,4 @@ pytest==7.2.1
 aiohttp==3.8.3
 aiolimiter==1.0.0
 scrapy-fake-useragent==1.4.4
+firebase-admin==6.0.1

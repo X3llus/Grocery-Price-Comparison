@@ -1,0 +1,16 @@
+categories = {
+  "preparedMeals": "27996",
+  "meat": "27998",
+  "fishAndSeafood": "27999",
+  "fruitsAndVegetables": "28000",
+  "deli": "28001",
+  "bakery": "28002",
+  "dairyAndEggs": "28003",
+  "drinks": "28004",
+  "frozen": "28005",
+  "pantry": "28006",
+  "naturalFoods": "28189",
+  "beerAndWine": "28236",
+  "snacksChipsAndCandy": "57025",
+  "internationalFoods": "58044",
+}
