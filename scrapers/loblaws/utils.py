@@ -56,12 +56,28 @@ def get_closest_store(user_lat, user_lng, stores):
 
   return closest_store
 
-
-def format_product_price(product: Dict) -> Dict:
+def format_product(product: Dict) -> Dict:
+  
+  try:
+    sku = product.get('code')
+  except:
+    return None
+  
   try:
     price = product.get('prices', {}).get('price', {}).get('value', 0)
   except:
     price = 0
+    
+  try:
+    image_url = product.get('imageAssets', [{}])[0].get('mediumUrl', "")
+  except:
+    image_url = None
+    
+  try:
+    in_stock = product.get('stockStatus', "")
+    in_stock = in_stock == "OK"
+  except:
+    in_stock = False
     
   try:
     size_unit = product.get('prices', {}).get('comparisonPrices', [{}])[0].get('unit', "ea")
@@ -73,37 +89,39 @@ def format_product_price(product: Dict) -> Dict:
     quantity = 1
     
   return {
+    'name': product.get('name', ""),
+    'brand': product.get('brand', ""),
+    'imageUrl': image_url,
+    'packageSize': product.get('packageSize', ""),
+    'inStock': in_stock,
     'price': price,
     'normalizedPrice': {
         'value': normalized,
         'quantity': quantity,
         'unit': size_unit
     },
-    'SKU': product.get('code', ""),
-    'lastUpdated': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+    'SKU': sku,
+    'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+  }
+
+
+def format_product_price(product: Dict) -> Dict:
+  return {
+    'inStock': product.get('inStock', False),
+    'price': product.get('price', 0),
+    'normalizedPrice': product.get('normalizedPrice', {}),
+    'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
   
   
 def format_base_product(product: Dict) -> Dict:
-  try:
-    image_url = product.get('imageAssets', [{}])[0].get('mediumUrl', "")
-  except:
-    image_url = None
-    
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
-    'imageUrl': image_url,
-    'packageSize': product.get('packageSize', ""),
-    'SKU': product.get('code', "")
+    'imageUrl': product.get('imageUrl', ""),
+    'packageSize': product.get('packageSize', "")
   }
 
   
-def get_unique_products(all_products: Dict, new_products: List) -> List:
-  existing_skus = []
-  categories = list(all_products.keys())
-  for category in categories:
-    for product in all_products[category]:
-      existing_skus.append(product['SKU'])
-  
-  return [x for x in new_products if x['SKU'] not in existing_skus]
+def filter_unique_products(all_products: List) -> List:
+  return list({product['SKU']: product for product in all_products}.values())

@@ -1,18 +1,19 @@
-import json
 import time
+import traceback
+
 from typing import Dict
 import asyncio
 import aiohttp
 from aiolimiter import AsyncLimiter
 
-from data import categories, store_locations
-from utils import get_closest_store, format_product, get_unique_products
+from data import categories
+from utils import filter_unique_products, format_product
+from RealtimeDbHelper import RealtimeDbHelper
 
 
 # The Orillia Zehrs
 lat = 44.58857
 lng = -79.415588
-closest_store = get_closest_store(lat, lng, store_locations)
 
 limiter = AsyncLimiter(max_rate=2, time_period=1) # 2 requests per second
 
@@ -22,8 +23,8 @@ request_headers = {
 }
 
 base_request_body = {
-  "storeId": closest_store['id'],
-  "banner": closest_store['storeBannerId'],
+  "storeId": "0559",
+  "banner": "zehrs",
   "lang": "en",
   "pickupType": "STORE",
   "date": time.strftime("%d%m%Y"),
@@ -59,17 +60,26 @@ async def get_products_for_category(session, category, all_products) -> Dict:
 
   while len(products) < data['pagination']['totalResults']:
     page += 1
-    data = await get_products(session, category, page)
-    print(f"Fetching {category}. {len(products) + 48} / {data['pagination']['totalResults']} products fetched")
-    formatted_products = [format_product(product) for product in data['results'] if product['stockStatus'] == "OK"]
-    products += get_unique_products(formatted_products)
+    try:
+      data = await get_products(session, category, page)
+      print(f"Fetching {category}. {len(products) + 48} / {data['pagination']['totalResults']} products fetched")
+      
+      # keep only the fields we need and remove products that don't have a SKU
+      formatted_products = [format_product(product) for product in data['results']]
+      formatted_products = [product for product in formatted_products if product is not None]
+      
+      products += formatted_products
+    except:
+      print(f"Error fetching {category} page {page}")
+      print(traceback.format_exc())
+      break
 
   print(f"{category} complete. {len(products)} products fetched")
-  all_products[category] = products
+  all_products.extend(products)
 
 
 async def get_all_products() -> Dict:
-  all_products = {}
+  all_products = []
   async with aiohttp.ClientSession() as session:
     tasks = []
     for category in categories.keys():
@@ -79,9 +89,22 @@ async def get_all_products() -> Dict:
 
 
 def main():
+  start_time = time.time()
   products = asyncio.run(get_all_products())
-  file_path = "test-extraction-data.json"
-  with open(file_path, "w") as outfile:
-    json.dump(products, outfile, indent=4)
+  
+  # remove duplicate products. this occurs when a product is in multiple categories
+  products = filter_unique_products(products)
+  
+  end_fetch_time = time.time()
+  db = RealtimeDbHelper()
+  store_type = 'zehrs'
+  store_id = '0559'
+  db.process_products(store_type, store_id, products)
+  end_time = time.time()
+  
+  print(f'Fetch time: {end_fetch_time - start_time}')
+  print(f'Process time: {end_time - end_fetch_time}')
+  print(f'Total time: {end_time - start_time}')
+  
     
 main()
