@@ -22,14 +22,6 @@ class RealtimeDbHelper():
     
   def __del__(self):
     firebase_admin.delete_app(self.app)
-    
-    
-  def get_base_product(self, sku):
-    try:
-      ref = db.reference(f'products/{sku}')
-      return ref.get()
-    except:
-      return None
 
 
   def get_product_price(self, sku, store_type, store_id):
@@ -37,16 +29,6 @@ class RealtimeDbHelper():
       ref = db.reference(f'store-prices/{store_type}-{store_id}-{sku}')
       return ref.get()
     except:
-      print(traceback.format_exc())
-      return None
-
-
-  def save_base_product(self, base_product, sku):
-    try:
-      ref = db.reference('products')
-      ref.child(sku).set(base_product)
-    except:
-      print(f'Error saving base product {sku}')
       print(traceback.format_exc())
       return None
     
@@ -60,28 +42,16 @@ class RealtimeDbHelper():
       print(traceback.format_exc())
     
     
-  def process_products(self, store_type, store_id, products):
+  def process_product_prices(self, store_type, store_id, products):
     num_products = len(products)
-    count = 0
-    reads = 0
-    writes = 0
     
     for product in products:
+      count += 1
       sku = product.pop('SKU')
-      existing = self.get_base_product(sku)
-      reads += 1
-      if existing is None:
-        base_product = format_base_product(product)
-        self.save_base_product(base_product, sku)
-        writes += 1
-
+      
       product_price = format_product_price(product)
       self.save_product_price(store_type, store_id, sku, product_price)
-      writes += 1
-      count += 1
-      print(f'Processed {count} / {num_products} products')
       
-    print('Done processing products')
-    print(f'Number of reads: {reads}')
-    print(f'Number of writes: {writes}')
+      if count % 100 == 0:
+        print(f'Processed {count} / {num_products} products')
       

@@ -114,12 +114,14 @@ def format_product_price(product: Dict) -> Dict:
   }
   
   
-def format_base_product(product: Dict) -> Dict:
+def format_base_product(product: Dict, parentCompany) -> Dict:
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': product.get('imageUrl', ""),
-    'packageSize': product.get('packageSize', "")
+    'packageSize': product.get('packageSize', ""),
+    'SKU': product.get('SKU', ""),
+    'parentCompany': parentCompany,
   }
 
   

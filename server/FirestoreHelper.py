@@ -24,8 +24,6 @@ class FirestoreHelper():
     .where(u'geoPoint.longitude', u'<=', range['lon_max'])\
     .stream()
     
-    range = find_latitude_longitude_range(lat, long, radius)
-    
     stores = [store.to_dict() for store in stores]
     stores = [store for store in stores if store['geoPoint']['latitude'] >= range['lat_min'] and store['geoPoint']['latitude'] <= range['lat_max']]
     
