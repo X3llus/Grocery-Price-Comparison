@@ -9,6 +9,7 @@ from aiolimiter import AsyncLimiter
 from data import categories
 from utils import filter_unique_products, format_product
 from RealtimeDbHelper import RealtimeDbHelper
+from FirestoreHelper import FirestoreHelper
 
 
 # The Orillia Zehrs
@@ -96,10 +97,10 @@ def main():
   products = filter_unique_products(products)
   
   end_fetch_time = time.time()
-  db = RealtimeDbHelper()
+  db = FirestoreHelper()
   store_type = 'zehrs'
   store_id = '0559'
-  db.process_products(store_type, store_id, products)
+  db.process_base_products(products, 'Loblaws')
   end_time = time.time()
   
   print(f'Fetch time: {end_fetch_time - start_time}')
