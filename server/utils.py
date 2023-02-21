@@ -22,20 +22,20 @@ def distance_between_coords(lat1, lon1, lat2, lon2, unit):
   return dist
 
 def find_latitude_longitude_range(center_lat, center_lon, radius_km):
-    d_lat = radius_km / 111.045
-    latitude_min = center_lat - d_lat
-    latitude_max = center_lat + d_lat
-    
-    d_lon = radius_km / (111.045 * math.cos(center_lat * (math.pi/180)))
-    longitude_min = center_lon - d_lon
-    longitude_max = center_lon + d_lon
-    
-    return  {
-      "lat_min": latitude_min,
-      "lat_max": latitude_max,
-      "lon_min": longitude_min,
-      "lon_max": longitude_max
-    }
+  d_lat = radius_km / 111.045
+  latitude_min = center_lat - d_lat
+  latitude_max = center_lat + d_lat
+  
+  d_lon = radius_km / (111.045 * math.cos(center_lat * (math.pi/180)))
+  longitude_min = center_lon - d_lon
+  longitude_max = center_lon + d_lon
+  
+  return  {
+    "lat_min": latitude_min,
+    "lat_max": latitude_max,
+    "lon_min": longitude_min,
+    "lon_max": longitude_max
+  }
   
 def get_closest_store(user_lat, user_lng, stores):
   closest_store = None
