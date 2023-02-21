@@ -2,6 +2,6 @@
     import '../app.css';
 </script>
 
-<div class="z-0 w-screen h-screen bg-background">
+<div class="z-0 bg-background">
 	<slot />
 </div>
