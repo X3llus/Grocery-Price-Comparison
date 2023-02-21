@@ -53,3 +53,74 @@ def get_closest_store(user_lat, user_lng, stores):
     print(f"Closest store is {closest_distance}km away")
 
   return closest_store
+
+
+def format_loblaws_store(store): 
+  try:
+    storeId = store['storeId']
+    type = store['storeBannerId']
+    latitude = store.get('geoPoint').get('latitude')
+    longitude = store.get('geoPoint').get('longitude')
+    country = store['address']['country']
+    line1 = store['address']['line1']
+    postalCode = store['address']['postalCode']
+    town = store['address']['town']
+    region = store['address']['region']
+    formattedAddress = f"{line1} {town}, {region} {postalCode}"
+  except:
+    return None
+  
+  return {
+    'address': {
+      'country': country,
+      'formattedAddress': formattedAddress,
+      'line1': line1,
+      'postalCode': postalCode,
+      'region': region,
+      'town': town
+    },
+    'geoPoint': {
+      'latitude': latitude,
+      'longitude': longitude
+    },
+    'storeId': storeId,
+    'type': type
+  }
+
+
+def format_walmart_store(store):
+  id = store.get('id')
+  if id is None:
+    return None
+  
+  storeId = str(id)
+  
+  try:
+    latitude = store.get('geoPoint').get('latitude')
+    longitude = store.get('geoPoint').get('longitude')
+    country = store['address']['country']
+    line1 = store['address']['address']
+    postalCode = store['address']['postalCode']
+    town = store['address']['city']
+    region = store['address']['state']
+    formattedAddress = f"{line1} {town}, {region} {postalCode}"
+  except:
+    return None
+  
+  return {
+    'address': {
+      'country': country,
+      'formattedAddress': formattedAddress,
+      'line1': line1,
+      'postalCode': postalCode,
+      'region': region,
+      'town': town
+    },
+    'geoPoint': {
+      'latitude': latitude,
+      'longitude': longitude
+    },
+    'storeId': storeId,
+    'type': 'Walmart'
+  }
+    

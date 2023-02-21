@@ -4,7 +4,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 
-from utils import format_base_product, format_product_price
+from utils import format_product_price
 
 class RealtimeDbHelper():
   def __init__(self):

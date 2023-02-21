@@ -1,11 +1,11 @@
-from utils import find_latitude_longitude_range
+from utils import find_latitude_longitude_range, format_walmart_store, format_loblaws_store
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
 class FirestoreHelper():
   def __init__(self):
-    cred = credentials.Certificate('scrapers\loblaws\serviceAccountKey.json')
+    cred = credentials.Certificate('server\serviceAccountKey.json')
     self.app = firebase_admin.initialize_app(cred)
     self.db = firestore.client()
     
@@ -14,12 +14,10 @@ class FirestoreHelper():
     firebase_admin.delete_app(self.app)
 
 
-  def get_local_stores(lat, long, radius):
-    db = firestore.client()
-    
+  def get_local_stores(self, lat, long, radius):    
     range = find_latitude_longitude_range(lat, long, radius)
     
-    stores = db.collection(u'Stores')\
+    stores = self.db.collection(u'Stores')\
     .where(u'geoPoint.longitude', u'>=', range['lon_min'])\
     .where(u'geoPoint.longitude', u'<=', range['lon_max'])\
     .stream()
@@ -49,3 +47,28 @@ class FirestoreHelper():
       stores.append(store_dict)
       
     return stores
+  
+  def add_loblaws_stores(self, stores):
+    print('Number of stores: ', len(stores))
+    formatted_stores = [format_loblaws_store(store) for store in stores]
+    print('Number of formatted stores: ', len(formatted_stores))
+    
+    count = 0
+    for store in formatted_stores:
+      if store is not None:
+        self.db.collection(u'Stores').add(store)
+        count += 1
+        print('Added store: ', count)
+
+  
+  def add_walmart_stores(self, stores):
+    print('Number of stores: ', len(stores))
+    formatted_stores = [format_walmart_store(store) for store in stores]
+    print('Number of formatted stores: ', len(formatted_stores))
+
+    count = 0
+    for store in formatted_stores:
+      if store is not None:
+        self.db.collection(u'Stores').add(store)
+        count += 1
+        print('Added store: ', count)
