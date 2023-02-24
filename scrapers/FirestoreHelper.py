@@ -1,25 +1,30 @@
-from utils import find_latitude_longitude_range, format_base_product
+from common import find_latitude_longitude_range, format_base_product
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
 class FirestoreHelper():
   def __init__(self):
-    cred = credentials.Certificate('scrapers\serviceAccountKey.json')
-    self.app = firebase_admin.initialize_app(cred)
-    self.db = firestore.client()
-    
-    
+    cred = credentials.Certificate('serviceAccountKey.json')
+    try:
+      self.app = firebase_admin.get_app('firestore')
+    except ValueError:
+      self.app = firebase_admin.initialize_app(cred, name='firestore')
+    self.db = firestore.client(self.app)
+      
+
+
   def __del__(self):
-    firebase_admin.delete_app(self.app)
+    try:
+      firebase_app = firebase_admin.get_app('firestore')
+      firebase_admin.delete_app(firebase_app)
+    except ValueError:
+      pass
 
-
-  def get_local_stores(lat, long, radius):
-    db = firestore.client()
-    
+  def get_local_stores(self, lat, long, radius):
     range = find_latitude_longitude_range(lat, long, radius)
     
-    stores = db.collection(u'Stores')\
+    stores = self.db.collection(u'Stores')\
     .where(u'geoPoint.longitude', u'>=', range['lon_min'])\
     .where(u'geoPoint.longitude', u'<=', range['lon_max'])\
     .stream()
@@ -62,24 +67,6 @@ class FirestoreHelper():
       return list(existing)[0].to_dict()
     
 
-  def save_base_product(self, product, parentCompany):
-    base_product = format_base_product(product, parentCompany)
+  def save_base_product(self, product, store_type):
+    base_product = format_base_product(product, store_type)
     self.db.collection(u'Products').add(base_product)
-    
-    
-  def process_base_products(self, products, parentCompany):
-    num_products = len(products)
-    count = 0
-    
-    for product in products:
-      count += 1
-      sku = product.get('SKU')
-      if sku is None:
-        continue
-      
-      existing = self.get_base_product(sku)
-      if existing is None:
-        self.save_base_product(product, parentCompany)
-      
-      if count % 100 == 0:
-        print(f'Processed {count} / {num_products} products')
