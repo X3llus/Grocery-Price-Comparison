@@ -23,31 +23,6 @@ def main():
   
   print(f'\nAll stores complete. Total time: {time.time() - start_time} seconds.')
 
-
-def get_data_for_store(store):
-  type = str(store['type']).lower()
-  print(f'Processing {type} store {store["storeId"]}')
   
-  extraction_time = 0
-  
-  if type == 'walmart':
-    company = 'walmart'
-  else:
-    company = 'loblaws'
-  
-  scraping_time = scrapy_run(company, str(store['storeId']), type)
-  base_product_time = firestore_helper.process_base_products(type)
-  prices_time = realtimedb_helper.process_product_prices(str(store['storeId']), type)
-  
-  extraction_time = scraping_time + base_product_time + prices_time
-  
-  if os.path.exists('product_items.jsonl'):
-    os.remove('product_items.jsonl')
-
-  
-  print(f'\nFinished processing {type} store {store["storeId"]}.')
-  print(f'Extraction time: {extraction_time} seconds.\n')
-      
-    
 if __name__ == '__main__':
   main()
