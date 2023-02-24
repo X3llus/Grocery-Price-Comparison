@@ -13,12 +13,12 @@ SPIDER_MODULES = ['crawlers.spiders']
 NEWSPIDER_MODULE = 'crawlers.spiders'
 
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
 FAKEUSERAGENT_PROVIDERS = [
     'scrapy_fake_useragent.providers.FakeUserAgentProvider',  # this is the first provider we'll try
     'scrapy_fake_useragent.providers.FakerProvider',  # if FakeUserAgentProvider fails, we'll use faker to generate a user-agent string for us
     'scrapy_fake_useragent.providers.FixedUserAgentProvider',  # fall back to USER_AGENT value
 ]
+
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0'
 
 # Obey robots.txt rules
@@ -30,9 +30,9 @@ CONCURRENT_REQUESTS = 2
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 5
+DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
+CONCURRENT_REQUESTS_PER_DOMAIN = 2
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
@@ -57,9 +57,9 @@ COOKIES_ENABLED = False
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 401,
     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
-    'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': 401,
+    'scrapy_fake_useragent.middleware.RetryUserAgentMiddleware': None,
 }
 
 # Enable or disable extensions
@@ -71,8 +71,9 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'crawlers.pipelines.DuplicatesPipeline': 300,
-   'crawlers.pipelines.PricePipeline': 500,
+    'crawlers.pipelines.DuplicatesPipeline': 300,
+    'crawlers.pipelines.ProductPipeline': 500,
+    'crawlers.pipelines.ProductPricesPipeline': 600,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
