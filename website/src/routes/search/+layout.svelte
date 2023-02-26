@@ -1,8 +1,11 @@
 <script>
+	import { page } from '$app/stores';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 
-	var sideOpen = false;
+	$: q = $page.url.searchParams.get('q') || '';
+
+	let sideOpen = false;
 
 	function change_address() {
 		// TODO: Change address
@@ -51,7 +54,10 @@
 			</div>
 		</div>
 	</div>
-	<button class="rounded-full bg-white w-12 h-12 flex justify-center items-center" on:click={() => (sideOpen = !sideOpen)}>
+	<button
+		class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
+		on:click={() => (sideOpen = !sideOpen)}
+	>
 		<Cart color={'black'} width={24} height={24} />
 	</button>
 </div>
