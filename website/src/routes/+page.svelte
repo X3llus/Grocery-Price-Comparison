@@ -56,7 +56,7 @@
 	<title>Groceriez | Home</title>
 </svelte:head>
 
-<div class="mx-auto text-center pt-20">
+<div class="mx-auto text-center">
     <div style="background-image: url(../../background.svg);" class="bg-center bg-cover">
         <img src="GroceriezLogo.svg" alt="" class="mx-auto py-32" width="600">
     </div>
