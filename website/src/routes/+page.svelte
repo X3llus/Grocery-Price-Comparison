@@ -1,5 +1,4 @@
 <script>
-	import { browser } from '$app/environment';
 	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import AOS from 'aos';

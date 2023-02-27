@@ -2,15 +2,18 @@
 	import { page } from '$app/stores';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
+	import Modal from '$lib/Modal.svelte';
+	import StoreMap from './StoreMap/StoreMap.svelte';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
 	let sideOpen = false;
+	let locationModalOpen = false;
 
-	function change_address() {
-		// TODO: Change address
-		console.log('change address');
-	}
+	const toggleLocationModal = () => {
+		locationModalOpen = !locationModalOpen;
+	};
+
 </script>
 
 <!-- Slide Menu -->
@@ -46,11 +49,14 @@
 		<div class="flex flex-col justify-center">
 			<div
 				class="flex-initial mx-14 flex hover:cursor-pointer text-white font-medium"
-				on:click={change_address}
-				on:keypress={change_address}
+				on:click|stopPropagation={toggleLocationModal}
+				on:keypress|stopPropagation={toggleLocationModal}
 			>
-				<div class="flex flex-col-reverse"><MapMarker width={22} height={22} /></div>
-				Random Address
+				<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
+				<div class="flex flex-col">
+					<span>Orillia, ON</span>
+					<span class="text-xs">Change Location</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -62,6 +68,38 @@
 	</button>
 </div>
 
+<!-- Location Modal -->
+<Modal visible={locationModalOpen} onClose={toggleLocationModal}>
+	<span slot="title">Change Location</span>
+	<StoreMap />
+	<span slot="footer">
+		<div class="modal-footer">
+			<button 
+				type="button"
+				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+				on:click={toggleLocationModal}
+			>
+				Apply
+			</button>
+		</div>
+	</span>
+</Modal>
+
 <div class="z-0 w-screen h-screen pt-20 bg-background">
 	<slot />
 </div>
+
+<style>
+		.modal-footer {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		padding: 1rem;
+		border-top: 1px solid #eee;
+	}
+
+	.modal-footer button {
+		background-color: rgb(26, 110, 216);
+	}
+</style>
