@@ -14,27 +14,27 @@
         {
             url: "/walmart.jpg",
             description: "Walmart Logo",
-            content: "Walmart Logo"
+            content: "Walmart while being a department store have a vaste variety of groceries"
         },
         {
             url: "/loblaws.jpg",
             description: "Loblaws Logo",
-            content: "Loblaws Logo"
+            content: "Loblaw Companies inclueds a variety of stores such as NoFrills, Zeher's and Loblaws"
         }
     ];
 
     const faq = [
         {
             question: "What products do you support?",
-            answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. Quisque non ligula nulla."
+            answer: "It's in our name! Groceriez is strictly a prices comparison platform for groceries."
         },
         {
             question: "Do I need to make an account?",
-            answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. Quisque non ligula nulla."
+            answer: "It is only necessary to make an account with us if you want to use our service to save lists or favourite products. Our simple look-up does not require an account."
         },
         {
             question: "Will you be adding more stores?",
-            answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. Quisque non ligula nulla."
+            answer: "We are constantly working on expanding the number of stores available to our customers! Sadly we do not have any estimates due to the complexity of the process we have to undertake for each store."
         }
     ];
 
@@ -51,11 +51,11 @@
 <!-- Couldn't find a integration with Tailwind and AOS Library so here is a style sheet. I'm not making my own integration. If someone finds one hmu-->
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
-<div class="mx-auto text-center pt-20">
+<div class="mx-auto text-center">
     <!-- To be replaced with SVG Art and Logo-->
-    <div class="py-40">
-	    <h1 class="text-9xl text-secondary font-sans font-thin">Groceriez</h1>
-    </div>
+    <div style="background-image: url(../../background.svg);" class="bg-center bg-cover">
+    <img src="GroceriezLogo.svg" alt="" class="mx-auto py-32" width="600">
+</div>
     <!-- Welcome -->
     <!-- To add Search Page, Login buttons -->
     <div class="bg-rich-black py-20">
@@ -81,24 +81,22 @@
                 <div class="flex w-1/3 items-center">
                     <Store color={'white'} width={200} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. 
-                        Quisque non ligula nulla.
+                        Searching our database for generic or specific brands of products and finding the best deal that is local to you.
                     </p>
                 </div>
                 <div class="border-x-2 border-white h-24"></div>
                 <div class="flex w-1/3 items-center">
-                    <List color={'white'} width={200} height={200} />
+                    <List color={'white'} width={240} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. 
-                        Quisque non ligula nulla.
+                        Making your life easier by letting you create and add items to custom grocery lists. 
+                        These lists will let you decide which stores to shop at.
                     </p>
                 </div>
                 <div class="border-x-2 border-white h-24"></div>
                 <div class="flex w-1/3 items-center">
                     <Account color={'white'} width={200} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis odio et viverra congue. 
-                        Quisque non ligula nulla.
+                        The creation of user accounts lets you see your search history, enables you to save lists and favourite products.
                     </p>
                 </div>
             </div>
@@ -110,7 +108,7 @@
                 {#each images as src}
                     <div class="p-2 rounded-xl bg-gradient-to-b from-rich-black to-primary shadow-xl flex justify-center items-center group">
                         <img class="h-auto max-w-sm rounded-xl duration-300 group-hover:blur-sm group-hover:opacity-20" src={src.url} alt={src.description}/>
-                        <p class="absolute opacity-0 group-hover:opacity-100 duration-500 text-white">{src.content}</p>
+                        <p class="absolute opacity-0 group-hover:opacity-100 duration-500 text-white max-w-sm">{src.content}</p>
                     </div>
                 {/each}
             </div>
