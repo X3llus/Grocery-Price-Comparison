@@ -1,14 +1,22 @@
 <script>
+	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import StoreMap from './StoreMap/StoreMap.svelte';
+	import { userLocation, updateUserLocation } from '../../stores';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
 	let sideOpen = false;
 	let locationModalOpen = false;
+
+	onMount(async () => {
+		// saves the user's location to the store & local storage
+		// then, since localStores is a derived store, it will trigger an update for the localStores
+		await updateUserLocation();
+	})
 
 	const toggleLocationModal = () => {
 		locationModalOpen = !locationModalOpen;
@@ -54,7 +62,7 @@
 			>
 				<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
 				<div class="flex flex-col">
-					<span>Orillia, ON</span>
+					<span>{$userLocation.city}, {$userLocation.province}</span>
 					<span class="text-xs">Change Location</span>
 				</div>
 			</div>
@@ -71,35 +79,10 @@
 <!-- Location Modal -->
 <Modal visible={locationModalOpen} onClose={toggleLocationModal}>
 	<span slot="title">Change Location</span>
+	<span slot="subtitle">Click and drag the marker to set a new location</span>
 	<StoreMap />
-	<span slot="footer">
-		<div class="modal-footer">
-			<button 
-				type="button"
-				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-				on:click={toggleLocationModal}
-			>
-				Apply
-			</button>
-		</div>
-	</span>
 </Modal>
 
 <div class="z-0 w-screen h-screen pt-20 bg-background">
 	<slot />
 </div>
-
-<style>
-		.modal-footer {
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-end;
-		align-items: center;
-		padding: 1rem;
-		border-top: 1px solid #eee;
-	}
-
-	.modal-footer button {
-		background-color: rgb(26, 110, 216);
-	}
-</style>

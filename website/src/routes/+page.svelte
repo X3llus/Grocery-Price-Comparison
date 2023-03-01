@@ -18,7 +18,7 @@
         {
             url: "/loblaws.jpg",
             description: "Loblaws Logo",
-            content: "Loblaw Companies inclueds a variety of stores such as NoFrills, Zeher's and Loblaws"
+            content: "Loblaw Companies inclueds a variety of stores such as No Frills, Zehrs and Loblaws"
         }
     ];
 
