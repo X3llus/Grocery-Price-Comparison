@@ -2,32 +2,26 @@
 	import { onDestroy, setContext, beforeUpdate } from 'svelte';
 	import { kmToPixels } from '$lib/utils';
 	import { mapbox, key } from './mapbox.js';
+	import { userLocation, searchRadius } from '../../../stores';
 
 	setContext(key, {
 		getMap: () => map,
 	});
 
-	export let lat;
-	export let lon;
-	export let radius;
 	let zoom = 10;
 	let container;
 	let map;
 
-	$: radiusInPixels = getRadiusInPixels(lat, zoom, radius);
-
-	const getRadiusInPixels = (lat, zoom, radius) => {
-		return kmToPixels(lat, zoom, radius);
-	};
+	$: radiusInPixels = kmToPixels($userLocation.latitude, zoom, $searchRadius);
 
 	function load() {
 		map = new mapbox.Map({
 			container,
 			style: 'mapbox://styles/mapbox/streets-v12',
-			center: [lon, lat],
+			center: [$userLocation.longitude, $userLocation.latitude],
 			zoom,
-			minZoom: 8,
-			maxZoom: 15,
+			minZoom: 6,
+			maxZoom: 12,
 		});
 
 		map.addControl(
@@ -40,27 +34,7 @@
 		map.addControl(new mapbox.GeolocateControl());
 
 		map.on('load', () => {
-			// A dot to represent the user's location
-			map.addLayer({
-				id: 'user-location',
-				type: 'circle',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: [lon, lat],
-						},
-					},
-				},
-				paint: {
-					'circle-radius': 6,
-					'circle-color': '#007cbf',
-				},
-			})
-
-			// A circle to represent the search radius
+			// Circle to represent the search radius
 			map.addLayer({
 				id: 'search-radius',
 				type: 'circle',
@@ -70,10 +44,7 @@
 						type: 'Feature',
 						geometry: {
 							type: 'Point',
-							coordinates: [lon, lat],
-						},
-						properties: {
-							radius,
+							coordinates: [$userLocation.longitude, $userLocation.latitude],
 						},
 					},
 				},
@@ -81,9 +52,9 @@
 					'circle-radius': radiusInPixels,
 					'circle-color': '#007cbf',
 					'circle-opacity': 0.3,
-					'circle-stroke-width': 1,
+					'circle-stroke-width': 2,
 					'circle-stroke-color': '#007cbf',
-					'circle-stroke-opacity': 0.5,
+					'circle-stroke-opacity': 0.75,
 				},
 			})
 		})

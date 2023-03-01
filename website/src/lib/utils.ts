@@ -25,5 +25,5 @@ const metersPerPixel = (lat, zoom) => {
 export const kmToPixels = (lat, zoom, km) => {
   const meters = km * 1000;
   const pixels = meters / metersPerPixel(lat, zoom);
-  return pixels;
+  return pixels * 2;
 }
