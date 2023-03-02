@@ -51,7 +51,7 @@
 			<div class="w-8 h-1 bg-white rounded-sm" />
 		</div>
 	</button> -->
-	<h1 class="text-3xl text-white leading-normal">Groceriez</h1>
+	<h1 class="text-3xl text-white leading-normal"><a href="/">Groceriez</a></h1>
 	<div class="flex flex-1">
 		<input class="p-2 rounded-lg flex-1" placeholder="Search products" />
 		<div class="flex flex-col justify-center">

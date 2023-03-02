@@ -9,7 +9,6 @@
 	import Account from 'svelte-material-icons/AccountOutline.svelte';
 	import ArrowDown from 'svelte-material-icons/ArrowDownDropCircle.svelte';
 	import ArrowUp from 'svelte-material-icons/ArrowUpDropCircleOutline.svelte';
-	import { prevent_default } from 'svelte/internal';
 
 	const images = [
         {
