@@ -45,12 +45,12 @@
 				</div>
 			</div>
 			{#if numStores > 0}
-				<p style="font-size: 1.2rem">
-					<span style="font-size: 1.25rem; font-weight: 600">{Math.round($animatedNumStores)}</span>
+				<p class="store-counter">
+					<span style="font-weight: 600">{Math.round($animatedNumStores)}</span>
 					 stores selected for comparison
 				</p>
 			{:else}
-				<p style="font-size: 1.2rem; font-weight:600; color: red">No stores selected for comparison</p>
+				<p class="store-counter" style="font-weight: 600; color: red">No stores selected for comparison</p>
 			{/if}
 		</div>
 	<Map>
@@ -86,5 +86,20 @@
 	.radius-container {
 		display: flex;
 		flex-direction: column;
+	}
+
+	.store-counter {
+		font-size: 1.25rem;
+	}
+
+	@media screen and (max-width: 500px) {
+		.info-container {
+			padding: 0 0.5rem 0.25rem 0.5rem;
+		}
+
+		.store-counter {
+			font-size: 1rem;
+			margin-left: 1rem;
+		}
 	}
 </style>

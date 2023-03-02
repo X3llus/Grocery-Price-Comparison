@@ -1,7 +1,5 @@
 import time
-import os
 from FirestoreHelper import FirestoreHelper
-from RealtimeDbHelper import RealtimeDbHelper
 from crawlers.runner import run as scrapy_run
 
 firestore_helper = FirestoreHelper()

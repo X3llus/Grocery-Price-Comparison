@@ -1,6 +1,7 @@
 <script>
 	import { fly, fade } from 'svelte/transition';
 	import Close from 'svelte-material-icons/Close.svelte'
+
 	export let visible = false;
 	export let onClose;
 
@@ -67,7 +68,6 @@
 	.header {
 		display: flex;
 		flex-direction: row;
-		justify-content: space-between;
 		align-items: baseline;
 		padding: 0.25rem 0.5rem;
 		border-bottom: 1px solid #eee;
@@ -84,7 +84,7 @@
 		font-size: 0.85rem;
 		font-weight: 400;
 		font-style: italic;
-		margin-right: 10rem;
+		margin-left: 3rem;
 	}
 
 	.close {
@@ -124,10 +124,22 @@
     right: 15px;
   }
 
-	@media screen and (max-width: 900px) {
+	@media screen and (max-width: 500px) {
 		.modal {
-			width: 100vw;
-			height: 80vh;
+			width: 95vw;
+			height: 75vh;
+			margin-top: 5vh;
+			padding: 5px;
+		}
+
+		.title {
+			font-size: 1.25rem;
+		}
+
+		.subtitle {
+			margin-left: 0;
+			margin-right: 2rem;
+			align-self: flex-end;
 		}
 	}
 </style>
