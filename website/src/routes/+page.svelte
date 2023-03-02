@@ -1,5 +1,6 @@
 <script>
 	import { slide } from 'svelte/transition';
+    import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import AOS from 'aos';
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
@@ -8,6 +9,7 @@
 	import Account from 'svelte-material-icons/AccountOutline.svelte';
 	import ArrowDown from 'svelte-material-icons/ArrowDownDropCircle.svelte';
 	import ArrowUp from 'svelte-material-icons/ArrowUpDropCircleOutline.svelte';
+	import { prevent_default } from 'svelte/internal';
 
 	const images = [
         {
@@ -38,11 +40,11 @@
     ];
 
 	let showContent = '';
+    let search = '';
+    
 	const handleClick = (/** @type {string} */ payload) => {
 		showContent = payload === showContent ? '' : payload;
 	};
-
-	let search = '';
 
 	onMount(() => {
 		AOS.init();
@@ -64,10 +66,16 @@
     <div class="bg-rich-black py-20">
         <div data-aos="fade-up" data-aos-once="true">
             <h2 class="text-7xl pb-10 text-white font-sans font-extrabold">Savings are just a click away!</h2>
-            <div id="search-bar" class="flex justify-center p-10">
-                <input bind:value={search} class="p-2 rounded-l-lg w-2/3 border-y border-l-2 border-accent shadow-md bg-gradient-to-b focus:outline-none" placeholder="Search our Products"/>
-				<a href="/search?q={search}" class="p-2 rounded-r-lg border-y border-r-2 border-accent bg-accent bg-grad shadow-md w-16 flex justify-center"><Magnify color={'white'} width={24} height={24} /></a>
-            </div>
+                <form on:submit|preventDefault={() => goto(`/search?q=${search}`)} class="flex justify-center p-10">
+                    <input 
+                        bind:value={search}
+                        class="p-2 rounded-l-lg w-2/3 border-y border-l-2 border-accent shadow-md bg-gradient-to-b focus:outline-none"
+                        placeholder="Search our Products"
+                    />
+				<button type="submit" class="p-2 rounded-r-lg border-y border-r-2 border-accent bg-accent bg-grad shadow-md w-16 flex justify-center">
+                    <Magnify color={'white'} width={24} height={24} />
+                </button>
+            </form>
             <p class="text-2xl px-60 font-sans font-medium text-background">
                 Tired of taking time and always looking for the best price when grocery shopping? Look no
                 further. Groceriez is your go-to App for price comparison at your local chain, Ontarian grocers.
