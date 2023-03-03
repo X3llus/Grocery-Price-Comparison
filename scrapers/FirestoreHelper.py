@@ -70,3 +70,7 @@ class FirestoreHelper():
   def save_base_product(self, product, store_type):
     base_product = format_base_product(product, store_type)
     self.db.collection(u'Products').add(base_product)
+    
+    
+  def save_store(self, store):
+    self.db.collection(u'Stores').add(store)

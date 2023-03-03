@@ -1,5 +1,7 @@
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
+from dotenv import dotenv_values
+import requests
 from FirestoreHelper import FirestoreHelper
 from RealtimeDbHelper import RealtimeDbHelper
 
@@ -64,6 +66,17 @@ class DuplicatesPipeline:
         else:
             self.seen.add(sku)
             return item
+        
+        
+class StoreLocationPipeline:
+    
+    def open_spider(self, spider):
+        self.client = FirestoreHelper()
+        
+    def process_item(self, item, spider):
+        self.client.save_store(item)
+        return item
+
 
         
         
