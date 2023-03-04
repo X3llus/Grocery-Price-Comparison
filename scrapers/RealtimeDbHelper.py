@@ -14,19 +14,19 @@ class RealtimeDbHelper():
     cred = credentials.Certificate('serviceAccountKey.json')
     
     try:
-      self.app = firebase_admin.get_app('realtime-db')
+      self.app = firebase_admin.get_app()
     except ValueError:    
       self.app = firebase_admin.initialize_app(cred, {
         'databaseURL': db_url,
         'databaseAuthVariableOverride': {
           'uid': uid
         }
-      }, name='realtime-db')
+      })
       
       
   def __del__(self):
     try:
-      realtime_app = firebase_admin.get_app('realtime-db')
+      realtime_app = firebase_admin.get_app()
       firebase_admin.delete_app(realtime_app)
     except ValueError:
       pass
