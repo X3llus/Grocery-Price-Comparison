@@ -4,9 +4,8 @@
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
-	import Modal from '$lib/Modal.svelte';
-	import StoreMap from './StoreMap/StoreMap.svelte';
-	import { userLocation, updateUserLocation } from '../../stores';
+	import { Modal, StoreMap } from '$lib/components';
+	import { userLocation, updateUserLocation } from '$lib/stores';
 
 	$: q = $page.url.searchParams.get('q') || '';
 

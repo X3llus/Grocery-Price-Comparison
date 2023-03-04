@@ -2,7 +2,7 @@
 	import { onDestroy, setContext, beforeUpdate } from 'svelte';
 	import { kmToPixels } from '$lib/utils';
 	import { mapbox, key } from './mapbox.js';
-	import { userLocation, searchRadius } from '../../../stores';
+	import { userLocation, searchRadius } from '$lib/stores';
 
 	setContext(key, {
 		getMap: () => map,
