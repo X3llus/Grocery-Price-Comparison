@@ -48,7 +48,7 @@
     <!-- For testing. Will need to load data and iterate over it here -->
     {#each testProducts as testProduct (testProduct.SKU)}
         <div 
-            transition:fly="{{ x: window.innerWidth, y: 0, duration: 1000, easing: quintOut }}"
+            transition:fly="{{ x: window.innerWidth, y: -500, duration: 1000, easing: quintOut }}"
             animate:flip="{{ duration: 250 }}"
         >
             <BaseProductCard Props={testProduct} on:addToCart={handleAddToCart} />
