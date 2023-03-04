@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import math
 
 def distance_between_coords(lat1, lon1, lat2, lon2, unit):
@@ -66,13 +66,12 @@ def format_base_product(product, store_type):
     'packageSize': product.get('packageSize', ""),
     'SKU': product.get('SKU', ""),
     'parentCompany': store_type,
-    'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
 
 
 def format_product_price(product):
   return {
-    'inStock': product.get('inStock', False),
+    'inStock': product.get('inStock', True),
     'price': product.get('price', 0),
     'normalizedPrice': product.get('normalizedPrice', {}),
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")

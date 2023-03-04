@@ -30,7 +30,7 @@ CONCURRENT_REQUESTS = 2
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 5
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 2
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -74,6 +74,7 @@ ITEM_PIPELINES = {
     'crawlers.pipelines.DuplicatesPipeline': 300,
     'crawlers.pipelines.ProductPipeline': 500,
     'crawlers.pipelines.ProductPricesPipeline': 600,
+    # 'crawlers.pipelines.StoreLocationPipeline': 700,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

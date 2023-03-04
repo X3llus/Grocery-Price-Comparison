@@ -10,7 +10,7 @@ def main():
   # Get stores in radius around Orillia
   lat = 44.58857
   lng = -79.415588
-  radius = 75
+  radius = 100
   
   stores = firestore_helper.get_local_stores(lat, lng, radius)
   num_stores = len(stores)

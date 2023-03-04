@@ -1,7 +1,6 @@
 import scrapy
 from dotenv import dotenv_values
 import aiohttp
-import asyncio
 
 class MetroLocationsSpider(scrapy.Spider):
   config = dotenv_values('C:\Lakehead\Winter2023\COMP4431-AdvancedProject\Grocery-Price-Comparison\scrapers\.env')

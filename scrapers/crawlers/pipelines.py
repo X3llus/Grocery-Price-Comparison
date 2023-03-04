@@ -1,7 +1,5 @@
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from dotenv import dotenv_values
-import requests
 from FirestoreHelper import FirestoreHelper
 from RealtimeDbHelper import RealtimeDbHelper
 
@@ -21,7 +19,8 @@ class ProductPipeline:
     def process_item(self, item, spider):
         self.count += 1
         
-        # if we've at least processed 30 products and 75% of them already exist, stop processing to save I/O costs
+        # if we've at least processed 30 products and 75% of them already exist
+        # stop reading / writing to Firestore to save on costs and time
         if self.count > 30 and self.num_existing / self.count > 0.75:
             return item
         
@@ -47,8 +46,11 @@ class ProductPricesPipeline:
     
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
-        self.client.save_product_price(spider.storeType, spider.storeId, adapter)
-        return item
+        if adapter.get('price') is None:
+            raise DropItem(f'Missing price: {item}')
+        else:
+            self.client.save_product_price(spider.storeType, spider.storeId, adapter)
+            return item
     
 
 class DuplicatesPipeline:
@@ -60,7 +62,7 @@ class DuplicatesPipeline:
         adapter = ItemAdapter(item)
         sku = adapter.get('SKU')
         if sku is None:
-            return DropItem(f'Missing SKU: {item}')
+            raise DropItem(f'Missing SKU: {item}')
         if sku in self.seen:
             raise DropItem(f'Duplicate item found: {item}')
         else:
