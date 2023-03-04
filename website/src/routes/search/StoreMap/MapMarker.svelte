@@ -2,6 +2,7 @@
 	import { getContext } from 'svelte';
 	import { mapbox, key } from './mapbox.js';
 	import { updateUserLocation } from '../../../stores';
+	import { getMapIcon } from '$lib/utils';
 
 	const { getMap } = getContext(key);
 	const map = getMap();
@@ -23,22 +24,17 @@
 
 	let marker;
 
-	if (type !== 'You') {
-		const lowerType = type.toLowerCase();
-		const image = lowerType.includes('walmart')
-			? 'WalmartMapIcon.png'
-			: 'LoblawsMapIcon.png';
-
+	if (type === 'You') {
+		marker = new mapbox.Marker({ draggable })
+	} else {
+		const { file, width, height } = getMapIcon(type);
 		const el = document.createElement('div');
 		el.className = 'marker';
-		el.style.backgroundImage = `url(${image})`;
-		el.style.width = lowerType === 'walmart' ? '40px': '32px';
-		el.style.height = lowerType === 'walmart' ? '27px': '32px';
+		el.style.backgroundImage = `url(${file})`;
+		el.style.width = `${width}px`;
+		el.style.height = `${height}px`;
 		el.style.backgroundSize = 'cover';
-		
-		marker = new mapbox.Marker(el, { draggable })
-	} else {
-		marker = new mapbox.Marker({ draggable })
+		marker = new mapbox.Marker(el)
 	}
 
 	marker.setLngLat([lon, lat])

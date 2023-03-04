@@ -27,3 +27,39 @@ export const kmToPixels = (lat, zoom, km) => {
   const pixels = meters / metersPerPixel(lat, zoom);
   return pixels * 2;
 }
+
+interface MapIcon {
+  file: string;
+  width: number;
+  height: number;
+}
+
+export const getMapIcon = (storeType: string): MapIcon => {
+  const lowerType = storeType.toLowerCase();
+  switch (lowerType) {
+    case 'walmart':
+      return {
+        file: 'WalmartMapIcon.png',
+        width: 40,
+        height: 27,
+      }
+    case 'loblaws':
+      return {
+        file: 'LoblawsMapIcon.png',
+        width: 32,
+        height: 32,
+      }
+    case 'metro':
+      return {
+        file: 'MetroMapIcon.png',
+        width: 32,
+        height: 32,
+      }
+    default:
+      return {
+        file: 'LoblawsMapIcon.png',
+        width: 32,
+        height: 32,
+      }
+    }
+  }
