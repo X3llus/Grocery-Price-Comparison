@@ -17,6 +17,8 @@
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^1.0.0",
 		"@sveltejs/kit": "^1.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.53.0",
+		"@typescript-eslint/parser": "^5.53.0",
 		"autoprefixer": "^10.4.13",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -25,6 +27,7 @@
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
 		"svelte": "^3.54.0",
+		"svelte-carousel": "^1.0.21",
 		"svelte-check": "^2.9.2",
 		"tailwindcss": "^3.2.4",
 		"typescript": "^4.9.3",
@@ -33,7 +36,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"aos": "^2.3.4",
 		"firebase": "^9.15.0",
+		"mapbox-gl": "^2.13.0",
 		"svelte-material-icons": "^2.1.0"
 	}
 }
