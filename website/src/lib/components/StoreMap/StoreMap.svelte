@@ -32,7 +32,6 @@
 		<div class="info-container">
 			<div class="radius-container">
 				<p style="font-size: 1.2rem">Search radius: <span style="font-size: 1.25rem; font-weight: 600">{$searchRadius}km</span></p>
-				<div>
 				<div style="display: flex; align-items: flex-end">
 					<label for="radius" style="margin-right: 0.5rem; font-size: 0.85rem; align-self: flex-start">Set radius</label>
 					<input
@@ -41,7 +40,6 @@
 						min="3"
 						max="75"	
 					>
-				</div>
 				</div>
 			</div>
 			{#if numStores > 0}
