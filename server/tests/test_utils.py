@@ -17,41 +17,91 @@ def test_distance_between_coords_n_mi():
 def test_find_latitude_longitude_range():
     pass
 
-def test_get_closest_store():
-    pass
+def test_get_closest_store_valid():
+    user_lat = 44.5920
+    user_lng = -79.4586
+
+    stores = [
+        {
+            'storeId': '0580',
+            'storeBannerId': 'zehrs',
+            'address': {
+                'country': 'Canada',
+                'line1': '289 Coldwater Road',
+                'postalCode': 'L3V 6J3',
+                'town': 'Orillia',
+                'region': 'Ontario'
+            },
+            'geoPoint': {
+                'latitude': 44.608261, 
+                'longitude': -79.437689
+            }
+        },
+        {
+            'storeId': '5678',
+            'storeBannerId': 'No Frills',
+            'address': {
+                'country': 'Canada',
+                'line1': '456 Queen St',
+                'postalCode': 'M2M 2M2',
+                'town': 'Toronto',
+                'region': 'Ontario'
+            },
+            'geoPoint': {
+                'latitude': 43.6545,
+                'longitude': -79.3793
+            }
+        }
+    ]
+    expected_output = {
+        'storeId': '0580',
+        'storeBannerId': 'zehrs',
+        'address': {
+            'country': 'Canada',
+            'line1': '289 Coldwater Road',
+            'postalCode': 'L3V 6J3',
+            'town': 'Orillia',
+            'region': 'Ontario'
+        },
+        'geoPoint': {
+            'latitude': 44.608261, 
+            'longitude': -79.437689
+        }
+    }
+    assert get_closest_store(user_lat, user_lng, stores) == expected_output
 
 def test_format_loblaws_store_valid():
     # Test valid input
     store = {
-        'storeId': '1234',
-        'storeBannerId': 'Loblaws',
+        'storeId': '0580',
+        'storeBannerId': 'Zehrs',
         'address': {
             'country': 'Canada',
-            'line1': '123 Main St',
-            'postalCode': 'M1M1M1',
-            'town': 'Toronto',
+            'line1': '289 Coldwater Road',
+            'postalCode': 'L3V 6J3',
+            'town': 'Orillia',
             'region': 'Ontario'
         },
         'geoPoint': {
-            'latitude': 43.6532,
-            'longitude': -79.3832
+            'latitude': 44.608261, 
+            'longitude': -79.437689
         }
     }
     expected_output = {
         'address': {
             'country': 'Canada',
-            'formattedAddress': '123 Main St Toronto, Ontario M1M1M1',
-            'line1': '123 Main St',
-            'postalCode': 'M1M1M1',
+            'formattedAddress': '289 Coldwater Road Orillia, Ontario L3V 6J3',
+            'line1': '289 Coldwater Road',
+            'postalCode': 'L3V 6J3',
             'region': 'Ontario',
-            'town': 'Toronto'
+            'town': 'Orillia'
         },
         'geoPoint': {
-            'latitude': 43.6532,
-            'longitude': -79.3832
+            'latitude': 44.608261, 
+            'longitude': -79.437689
         },
-        'storeId': '1234',
-        'type': 'Loblaws'
+        'storeId': '0580',
+        'type': 'Zehrs'
     }
     assert format_loblaws_store(store) == expected_output
 
