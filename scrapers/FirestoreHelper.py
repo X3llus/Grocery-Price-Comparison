@@ -13,13 +13,13 @@ class FirestoreHelper():
     self.db = firestore.client(self.app)
       
 
-
   def __del__(self):
     try:
       firebase_app = firebase_admin.get_app('firestore')
       firebase_admin.delete_app(firebase_app)
     except ValueError:
       pass
+
 
   def get_local_stores(self, lat, long, radius):
     range = find_latitude_longitude_range(lat, long, radius)
@@ -70,3 +70,7 @@ class FirestoreHelper():
   def save_base_product(self, product, store_type):
     base_product = format_base_product(product, store_type)
     self.db.collection(u'Products').add(base_product)
+    
+    
+  def save_store(self, store):
+    self.db.collection(u'Stores').add(store)

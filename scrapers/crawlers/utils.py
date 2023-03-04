@@ -1,3 +1,4 @@
+import re
 from typing import Dict
 from crawlers.data import store_locations
 
@@ -76,12 +77,57 @@ def format_loblaws_product(product: Dict) -> Dict:
     'inStock': in_stock,
     'price': price,
     'normalizedPrice': {
-        'value': normalized,
-        'quantity': quantity,
-        'unit': size_unit
+      'value': normalized,
+      'quantity': quantity,
+      'unit': size_unit
     },
     'SKU': sku,
   }
+  
+  
+def format_metro_product(product: Dict) -> Dict:
+  try:
+    sku = product.get('SKU')
+  except:
+    return None
+  
+  try:
+    price_str = product.get('price', "")
+    price = float(re.sub(r"[^0-9.]", '', price_str))
+      
+    normalized_str = product.get('normalizedPrice', "")
+    value_str = re.search(r"[0-9]{1,4}\.[0-9]{2}", normalized_str)
+    if value_str:
+      value_str = value_str.group()
+      
+    quantity_str = re.search(r"(?<=/)\s*[0-9]{1,4}", normalized_str)
+    if quantity_str:
+      quantity_str = quantity_str.group().strip()
+
+    unit = re.search(r"[a-zA-Z]+", normalized_str)
+    if unit:
+      unit = unit.group()
+    
+    value = float(value_str) if value_str else 0
+    quantity = float(quantity_str) if quantity_str else 1
+    unit = unit if unit else "ea"
+      
+    return {
+      'name': product.get('name', ""),
+      'brand': product.get('brand', ""),
+      'category': product.get('category', ""),
+      'imageUrl': product.get('imageUrl', ""),
+      'packageSize': product.get('packageSize', ""),
+      'price': price,
+      'normalizedPrice': {
+        'value': value,
+        'quantity': quantity,
+        'unit': unit
+      },
+      'SKU': sku,
+    }
+  except:
+    return None
   
 
 def get_price_request_body(products: list[Dict], storeId) -> Dict:
