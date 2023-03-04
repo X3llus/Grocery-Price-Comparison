@@ -17,13 +17,9 @@
 
 </script>
 
-
-
-
-
 <div class="relative">
-  <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <img class="rounded-t-lg" src={Props.imageUrl} alt={Props.name} />
+  <div class="h-96 flex flex-col justify-between max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <img class="rounded-t-lg object-cover h-full" src={Props.imageUrl} alt={Props.name} />
     <div class="p-5">
       <h5 class="truncate text-primary text-xl font-sans font-medium tracking-tight text-gray-800 dark:text-white">
         {Props.name}
