@@ -36,20 +36,26 @@ export const setLocation = async (position): Promise<Location> => {
     position.latitude = position.coords.latitude;
     position.longitude = position.coords.longitude;
   }
+
   if (!position.latitude && !position.longitude) {
     return defaultLocation;
   }
+
   const { latitude, longitude } = position;
   const location: Location = { latitude, longitude };
-  const reverseGeocode = await getReverseGeocode(latitude, longitude);
-  if (reverseGeocode) {
-    const { city, province } = reverseGeocode;
-    location.city = city;
-    location.province = province;
+
+  try {
+    const reverseGeocode = await getReverseGeocode(latitude, longitude);
+    if (reverseGeocode) {
+      const { city, province } = reverseGeocode;
+      location.city = city;
+      location.province = province;
+    }
+  } catch (error) {
+    console.warn('Could not get user city and province');
   }
 
   localStorage.setItem('location', JSON.stringify(location));
-
   return location;
 }
 
