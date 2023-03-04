@@ -44,7 +44,7 @@
 	<title>Groceriez | Search</title>
 </svelte:head>
 
-<div class="mx-auto w-2/3 grid grid-cols-3 gap-10 pt-20 place-content-center">
+<div class="mx-auto w-2/3 grid grid-cols-1 md:grid-cols-3 gap-10 pt-20 place-content-center">
     <!-- For testing. Will need to load data and iterate over it here -->
     {#each testProducts as testProduct (testProduct.SKU)}
         <div 
