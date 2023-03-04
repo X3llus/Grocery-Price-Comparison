@@ -15,7 +15,17 @@ def test_distance_between_coords_n_mi():
     assert round(x) == 134 
 
 def test_find_latitude_longitude_range():
-    pass
+    # lakehead university coords
+    center_lat = 44.608261
+    center_lon = -79.437689
+    radius_km = 5
+    expected_output = {
+        "lat_min": 44.56323420905939,
+        "lat_max": 44.65328779094061,
+        "lon_min": -79.50093555480052,
+        "lon_max": -79.37444244519949
+    }
+    assert find_latitude_longitude_range(center_lat, center_lon, radius_km) == expected_output
 
 def test_get_closest_store_valid():
     user_lat = 44.5920
@@ -71,7 +81,6 @@ def test_get_closest_store_valid():
     assert get_closest_store(user_lat, user_lng, stores) == expected_output
 
 def test_format_loblaws_store_valid():
-    # Test valid input
     store = {
         'storeId': '0580',
         'storeBannerId': 'Zehrs',
