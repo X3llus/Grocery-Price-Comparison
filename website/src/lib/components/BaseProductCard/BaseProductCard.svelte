@@ -1,15 +1,10 @@
 <script lang='ts'>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { getCardIcon } from '$lib/utils';
   import type { Product } from '$lib/types';
 
   export let Props: Product;
-  let companyIcon: string;
   const dispatch = createEventDispatcher<{addToCart:{SKU:string}}>();
-
-  onMount(() => {
-    companyIcon = getCardIcon(Props.parentCompany);
-  });
 
   const handleAddToCart = () => {
     dispatch('addToCart', {SKU: Props.SKU});
@@ -41,6 +36,6 @@
     </div>
   </div>
   <div class="absolute inline-flex items-center justify-center w-14 h-14 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900">
-    <img src={companyIcon} alt={Props.parentCompany} title={Props.parentCompany} />
+    <img src={getCardIcon(Props.parentCompany)} alt={Props.parentCompany} title={Props.parentCompany} />
   </div>
 </div>

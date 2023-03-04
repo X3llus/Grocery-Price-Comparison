@@ -4,7 +4,7 @@
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
-	import { Modal, StoreMap } from '$lib/components';
+	import { Modal, StoreMap, CartList } from '$lib/components';
 	import { userLocation, updateUserLocation } from '$lib/stores';
 
 	$: q = $page.url.searchParams.get('q') || '';
@@ -36,6 +36,7 @@
 >
 	<div class="h-full bg-background">
 		<h2 class="text-2xl text-black py-4 w-full text-center">List/Cart</h2>
+		<CartList />
 	</div>
 </div>
 

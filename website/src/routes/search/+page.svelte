@@ -3,7 +3,7 @@
 	import { quintOut } from 'svelte/easing';
     import { BaseProductCard } from '$lib/components';
     import { flip } from 'svelte/animate';
-
+    
     let testProducts = [
         {
             SKU: '20303218010_C06',
