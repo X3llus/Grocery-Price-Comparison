@@ -3,14 +3,13 @@
 	import { getDoc, doc, db } from "$lib/firebase.js";
 
     let hits = [];
-    $: console.log(hits);
 
     searchStore.subscribe((value) => {
         if (value.length === 0) return;
+        hits = [];
 
         // read the documents from firestore
         const docs = value.map((doc) => doc.path);
-        console.log(docs);
         docs.forEach(async (path) => {
             const _doc = await getDoc(doc(db, path));
             hits = [...hits, {
@@ -67,7 +66,7 @@
 				</div>
 			</div> -->
 			<a
-				href="#"
+				href="/product/{hit.id}"
 				class="button bg-primary w-full rounded-xl text-white text-sm font-sans font-medium p-2 flex justify-center shadow-md hover:opacity-90"
 				>Veiw Product Details</a
 			>

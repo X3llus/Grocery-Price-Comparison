@@ -151,8 +151,8 @@
                 </div>
             </div>
             <div class="bg-primary pt-20 pb-5 flex gap-5 justify-center">
-                <a href="#" class="text-xl pb-10 font-sans font-medium text-background underline hover:no-underline">Terms of Service</a>
-                <a href="#" class="text-xl pb-10 font-sans font-medium text-background underline hover:no-underline">Privacy Policy</a>
+                <a href="/tos" class="text-xl pb-10 font-sans font-medium text-background underline hover:no-underline">Terms of Service</a>
+                <a href="/privacy" class="text-xl pb-10 font-sans font-medium text-background underline hover:no-underline">Privacy Policy</a>
             </div>
         </div>
     </div>

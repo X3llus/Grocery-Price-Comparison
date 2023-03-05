@@ -26,6 +26,10 @@
 		// saves the user's location to the store & local storage
 		// then, since localStores is a derived store, it will trigger an update for the localStores
 		await updateUserLocation();
+		if (q) {
+			search = q;
+			searchItems();
+		}
 	});
 
 	const toggleLocationModal = () => {
@@ -36,6 +40,7 @@
 		let hits = await index.search(search, {
 			hitsPerPage: 25
 		});
+		console.log(hits);
 		searchStore.set(hits.hits);
 
 		$page.url.searchParams.set('q', search);
