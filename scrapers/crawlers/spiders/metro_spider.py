@@ -8,8 +8,10 @@ class MetroSpider(scrapy.Spider):
   start_urls = ['https://www.metro.ca/en/online-grocery/search']
   
   custom_settings = {
-    'DOWNLOAD_DELAY': 12,
-    'AUTOTHROTTLE_START_DELAY': 12,
+    'DOWNLOAD_DELAY': 16,
+    'AUTOTHROTTLE_START_DELAY': 16,
+    'CONCURRENT_REQUESTS': 1,
+    'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
   }
   
   def __init__(self, *args, **kwargs):

@@ -4,8 +4,7 @@
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
 	import Cart from 'svelte-material-icons/Cart.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
-	import Modal from '$lib/Modal.svelte';
-	import StoreMap from '$lib/StoreMap/StoreMap.svelte';
+	import { Modal, StoreMap, CartList } from '$lib/components';
 	import { userLocation, updateUserLocation } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
 	import { goto } from '$app/navigation';
@@ -56,6 +55,7 @@
 >
 	<div class="h-full bg-background">
 		<h2 class="text-2xl text-black py-4 w-full text-center">List/Cart</h2>
+		<CartList />
 	</div>
 </div>
 

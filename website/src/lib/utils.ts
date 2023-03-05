@@ -63,3 +63,17 @@ export const getMapIcon = (storeType: string): MapIcon => {
       }
     }
   }
+
+export const getCardIcon = (storeType: string): string => {
+  const lowerType = storeType.toLowerCase();
+  switch (lowerType) {
+    case 'walmart':
+      return 'WalmartCardIcon.png';
+    case 'loblaws':
+      return 'LoblawsCardIcon.png';
+    case 'metro':
+      return 'MetroCardIcon.png';
+    default:
+      return 'LoblawsCardIcon.png';
+  }
+}

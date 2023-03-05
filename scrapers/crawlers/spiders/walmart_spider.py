@@ -27,12 +27,6 @@ class WalmartSpider(scrapy.Spider):
   # 3. Hit /price-offer to get the price of each product on the page
   # 4. Repeat steps 1 - 3 with incremented page number until all pages have been fetched
   def parse_category(self, response, category, page):
-    # if 'blocked' in response.url:
-    #   print(f'Page {page} of {category} blocked. Retrying...')
-    #   await asyncio.sleep(5)
-    #   yield scrapy.Request(url=response.request.url, callback=self.parse_category, cb_kwargs=dict(category=category, page=page))
-    #   return
-    
     print(f'Fetching page {page} for category {category}...')
     json_response = json.loads(response.text)
     
@@ -61,12 +55,6 @@ class WalmartSpider(scrapy.Spider):
     
   
   def parse_additional_products(self, response, products):
-    # if 'blocked' in response.url:
-    #   print('Additional products blocked. Retrying...')
-    #   await asyncio.sleep(5)
-    #   yield JsonRequest(url=response.request.url, method=response.request.method, data=response.request.body, callback=self.parse_additional_products, cb_kwargs=dict(products=products))
-    #   return
-      
     json_response = json.loads(response.text)
     
     additionalProducts = [format_product(p) for p in list(json_response['products'].values())]
@@ -78,12 +66,6 @@ class WalmartSpider(scrapy.Spider):
   
   
   def parse_prices(self, response, products):
-    # if 'blocked' in response.url:
-    #   print('Prices blocked. Retrying...')
-    #   await asyncio.sleep(5)
-    #   yield JsonRequest(url=response.request.url, method=response.request.method, data=response.request.body, callback=self.parse_prices, cb_kwargs=dict(products=products))
-    #   return
-    
     json_response = json.loads(response.text)
     
     prices = [trim_price_response(p) for p in list(json_response['offers'].values())]

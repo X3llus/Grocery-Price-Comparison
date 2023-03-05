@@ -1,10 +1,11 @@
 export type Product = {
-  sku: string
+  SKU: string
   name: string
   brand: string
   imageUrl: string
   packageSize: string
   parentCompany: string
+  catagory?: string
 }
 
 export type NormalizedPrice = {
