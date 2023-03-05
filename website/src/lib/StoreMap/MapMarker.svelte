@@ -1,7 +1,7 @@
 <script>
 	import { getContext } from 'svelte';
 	import { mapbox, key } from './mapbox.js';
-	import { updateUserLocation } from '../../../stores';
+	import { updateUserLocation } from '$lib/stores.js';
 	import { getMapIcon } from '$lib/utils';
 
 	const { getMap } = getContext(key);

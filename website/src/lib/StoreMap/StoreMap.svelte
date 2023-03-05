@@ -4,7 +4,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import Map from './Map.svelte';
 	import MapMarker from './MapMarker.svelte';
-	import { userLocation, searchRadius, localStores } from '../../../stores';
+	import { userLocation, searchRadius, localStores } from '$lib/stores';
 
 	let numStores = 0;
 	const animatedNumStores = tweened(numStores, {
