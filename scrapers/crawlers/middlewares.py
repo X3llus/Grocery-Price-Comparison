@@ -4,7 +4,9 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.utils.response import response_status_message
+from time import sleep
 
 class CrawlersSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -98,3 +100,21 @@ class CrawlersDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+        
+        
+class SleepRetryMiddleware(RetryMiddleware):
+    def __init__(self, settings):
+        RetryMiddleware.__init__(self, settings)
+        
+    
+    def process_response(self, request, response, spider):
+        # They're on to us!
+        # If the sever is blocking the requests, wait 90 seconds and retry
+        if response.status in [400, 408, 429]:
+            print("Request blocked, pausing 90 seconds before retrying...")
+            sleep(90)
+            print("Resuming request...")
+            reason = response_status_message(response.status)
+            return self._retry(request, reason, spider) or response
+        
+        return super(SleepRetryMiddleware, self).process_response(request, response, spider)
