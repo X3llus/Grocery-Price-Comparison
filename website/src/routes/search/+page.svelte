@@ -1,6 +1,7 @@
 <script>
 	import { searchStore } from "$lib/searchStore";
 	import { getDoc, doc, db } from "$lib/firebase.js";
+	import { onDestroy } from "svelte";
 
     let hits = [];
 
@@ -12,12 +13,21 @@
         const docs = value.map((doc) => doc.path);
         docs.forEach(async (path) => {
             const _doc = await getDoc(doc(db, path));
+			// get the store from realtime database
+			// Metro-0000-011115001172
+
+			// add to hits
             hits = [...hits, {
                 id: _doc.id,
                 ..._doc.data()
             }]
         });
     });
+
+	onDestroy(() => {
+		hits = [];
+		searchStore.set([]);
+	});
 </script>
 
 <svelte:head>
