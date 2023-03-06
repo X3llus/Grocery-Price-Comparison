@@ -75,7 +75,6 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     'crawlers.pipelines.DuplicatesPipeline': 300,
     'crawlers.pipelines.ProductPipeline': 500,
-    'crawlers.pipelines.ProductPricesPipeline': 600,
     # 'crawlers.pipelines.StoreLocationPipeline': 700,
 }
 

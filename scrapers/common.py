@@ -71,7 +71,6 @@ def format_base_product(product, store_type):
 
 def format_product_price(product):
   return {
-    'inStock': product.get('inStock', True),
     'price': product.get('price', 0),
     'normalizedPrice': product.get('normalizedPrice', {}),
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
