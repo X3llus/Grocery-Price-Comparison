@@ -124,6 +124,6 @@
 	<StoreMap />
 </Modal>
 
-<div class="z-0 w-screen h-screen pt-20 bg-background">
+<div class="z-0 h-screen pt-20 bg-background">
 	<slot />
 </div>
