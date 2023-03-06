@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-
+import { getDatabase} from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,8 +25,9 @@ export {
 	sendPasswordResetEmail
 } from 'firebase/auth';
 let db = getFirestore(app);
+let rtdb = getDatabase(app);
 
-export { db, app };
+export { db, app, rtdb };
 export {
 	collection,
 	doc,
@@ -43,3 +44,10 @@ export {
 	deleteDoc,
 	deleteField
 } from 'firebase/firestore';
+
+export {
+	ref,
+	child,
+	get
+} from "firebase/database";
+
