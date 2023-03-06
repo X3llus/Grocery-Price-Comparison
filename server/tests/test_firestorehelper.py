@@ -36,7 +36,6 @@ def test_get_local_stores():
             'storeId': '0580',
             'type': 'zehrs'
         }]
-    print(ins.get_local_stores(44.608261,-79.437689,1))
     assert ins.get_local_stores(44.608261,-79.437689,1) == expectedValue
 
 def test_get_local_stores_postal():
