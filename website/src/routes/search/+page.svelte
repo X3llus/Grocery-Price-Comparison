@@ -69,6 +69,7 @@
 					class="truncate text-primary text-xl font-sans font-medium group-hover:text-black"
 					data-tooltip-target="title"
 					data-tooltip-placement="bottom"
+					title="{hit.name}"
 				>
 					{hit.name}
 				</h2>
