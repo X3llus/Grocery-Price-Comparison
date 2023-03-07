@@ -38,7 +38,7 @@
 
 	async function searchItems() {
 		let hits = await index.search(search + ' ', {
-			hitsPerPage: 25,
+			hitsPerPage: 30,
 		});
 		searchStore.set(hits.hits);
 

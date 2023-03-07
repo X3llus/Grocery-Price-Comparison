@@ -26,22 +26,28 @@
 					snapshot = await get(child(_ref, `store-prices/Metro-0000-${_doc.data().SKU}`));
 					break;
 
+				case 'Walmart':
+					snapshot = await get(child(_ref, `store-prices/walmart-3153-${_doc.data().SKU}`));
+					break;
+
 				default:
 					break;
 			}
 
-			const price = snapshot.exists() ? snapshot.val().price : null;
-			if (price === null) return;
+			try {
+				const price = snapshot.exists() ? snapshot.val().price : null;
+				if (price === null) return;
 
-			// add to hits
-			hits = [
-				...hits,
-				{
-					id: _doc.id,
-					..._doc.data(),
-					price,
-				},
-			];
+				// add to hits
+				hits = [
+					...hits,
+					{
+						id: _doc.id,
+						..._doc.data(),
+						price,
+					},
+				];
+			} catch (error) {}
 		});
 	});
 
