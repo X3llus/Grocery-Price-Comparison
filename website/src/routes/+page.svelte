@@ -11,11 +11,11 @@
 	import ArrowUp from 'svelte-material-icons/ArrowUpDropCircleOutline.svelte';
 
 	const images = [
-        // {
-        //     url: "/walmart.jpg",
-        //     description: "Walmart Logo",
-        //     content: "Walmart while being a department store have a vaste variety of groceries"
-        // },
+        {
+            url: "/walmart.jpg",
+            description: "Walmart Logo",
+            content: "Walmart while being a department store have a vaste variety of groceries"
+        },
         {
             url: "/loblaws.jpg",
             description: "Loblaws Logo",
