@@ -55,7 +55,7 @@
 
 <!-- Slide Menu -->
 <div
-	class="fixed right-0 top-0 h-screen transition-transform z-30 w-96"
+	class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
 	style="transform: translateX({sideOpen ? '0%' : '100%'});"
 >
 	<div class="h-full bg-background flex flex-col">
