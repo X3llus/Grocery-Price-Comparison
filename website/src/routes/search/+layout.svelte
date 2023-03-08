@@ -5,6 +5,7 @@
 	import ListBox from 'svelte-material-icons/ListBox.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 	import Delete from 'svelte-material-icons/Delete.svelte';
+	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
 	import { Modal, StoreMap } from '$lib/components';
 	import { userLocation, updateUserLocation } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
@@ -58,7 +59,15 @@
 	style="transform: translateX({sideOpen ? '0%' : '100%'});"
 >
 	<div class="h-full bg-background flex flex-col">
-		<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
+		<div class="grid grid-cols-3">
+			<button
+				class="ml-2"
+				on:click={() => (sideOpen = !sideOpen)}
+			>
+			<Arrow color={'black'} width={32} height={32} />
+		</button>
+			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
+		</div>
 		<ul class="flex-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
 			{#each $searchListStore as item, i}
 				<li class="py-3 sm:pb-4 px-0.5 flex">
@@ -105,7 +114,7 @@
 
 <!-- Main Nav Bar -->
 <div
-	class="fixed left-0 top-0 w-screen z-10 py-1 px-4 md:py-4 md:px-6 flex space-x-2 md:space-x-4 bg-primary shadow-lg"
+	class="fixed left-0 top-0 w-screen z-10 py-1 px-4 md:py-4 md:px-6 flex space-x-2 md:space-x-4 bg-primary shadow-lg items-center"
 >
 	{#if screenSize > screenSmall}
 		<h1 class="text-3xl text-white leading-normal"><a href="/">Groceriez</a></h1>
@@ -128,6 +137,7 @@
 		</form>
 		
 	</div>
+	{#if screenSize > screenSmall}
 	<div class="flex flex-col justify-center">
 		<button
 			class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
@@ -149,6 +159,25 @@
 	>
 		<ListBox color={'black'} width={24} height={24} />
 	</button>
+	{:else}
+	<div class="flex flex-col justify-center">
+		<button
+			class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
+			on:click|stopPropagation={toggleLocationModal}
+			on:keypress|stopPropagation={toggleLocationModal}
+			aria-label="Change Location"
+		>
+			<div class="flex flex-col justify-center" title="{$userLocation.city}, {$userLocation.province}"><MapMarker width={22} height={22} /></div>
+		</button>
+	</div>
+	<button
+		class=""
+		on:click={() => (sideOpen = !sideOpen)}
+		aria-label="Cart"
+	>
+		<ListBox color={'white'} width={24} height={24} />
+	</button>
+	{/if}
 </div>
 
 <!-- Location Modal -->
