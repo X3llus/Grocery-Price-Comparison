@@ -11,11 +11,11 @@
 	import ArrowUp from 'svelte-material-icons/ArrowUpDropCircleOutline.svelte';
 
 	const images = [
-        {
-            url: "/walmart.jpg",
-            description: "Walmart Logo",
-            content: "Walmart while being a department store have a vaste variety of groceries"
-        },
+        // {
+        //     url: "/walmart.jpg",
+        //     description: "Walmart Logo",
+        //     content: "Walmart Inc. is an American multinational retail corporation that operates a chain of hypermarkets, discount department stores, and grocery stores."
+        // },
         {
             url: "/loblaws.jpg",
             description: "Loblaws Logo",
@@ -40,6 +40,10 @@
         {
             question: "Will you be adding more stores?",
             answer: "We are constantly working on expanding the number of stores available to our customers! Sadly we do not have any estimates due to the complexity of the process we have to undertake for each store."
+        },
+        {
+            question: "Do you have a mobile app?",
+            answer: "Currently we don't have an app, but our site is fully optimized for mobile browsing!"
         }
     ];
 
@@ -67,10 +71,10 @@
     </div>
     <!-- Welcome -->
     <!-- To add Search Page, Login buttons -->
-    <div class="bg-rich-black py-20 px-10 md-px-30 lg:px-60">
+    <div class="bg-rich-black py-20 px-10 md:px-30 xl:px-60">
         <div data-aos="fade-up" data-aos-once="true">
             <h2 class="text-7xl pb-10 text-white font-sans font-extrabold">Savings are just a click away!</h2>
-                <form on:submit|preventDefault={() => goto(`/search?q=${search}`)} class="flex justify-center p-10">
+                <form on:submit|preventDefault={() => goto(`/search?q=${search}`)} class="flex justify-center py-10">
                     <input 
                         bind:value={search}
                         class="p-2 rounded-l-lg w-2/3 border-y border-l-2 border-accent shadow-md bg-gradient-to-b focus:outline-none"
@@ -93,22 +97,22 @@
         <div data-aos="fade-up" data-aos-once="true">
             <h2 class="text-6xl p-5 font-sans font-bold text-white">Our Dev Map</h2>
             <div class="mx-auto justify-center gap-10 flex flex-col xl:flex-row px-5 pb-10 items-center">
-                <div class="flex w-2/3 lg:w-1/3 items-center">
+                <div class="flex w-3/4 lg:w-1/3 items-center">
                     <Store color={'white'} width={200} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
                         Searching our database for generic or specific brands of products and finding the best deal that is local to you.
                     </p>
                 </div>
-                <div class="border-y-2 xl:border-y-0 xl:border-x-2 border-white w-1/3 xl:w-0 xl:h-24"/>
-                <div class="flex w-2/3 xl:w-1/3 items-center">
+                <div class="border-y-2 xl:border-y-0 xl:border-x-2 border-white w-1/2 xl:w-0 xl:h-24"/>
+                <div class="flex w-3/4 xl:w-1/3 items-center">
                     <List color={'white'} width={240} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
                         Making your life easier by letting you create and add items to custom grocery lists. 
                         These lists will let you decide which stores to shop at.
                     </p>
                 </div>
-                <div class="border-y-2 xl:border-y-0 xl:border-x-2 border-white w-1/3 xl:w-0 xl:h-24"/>
-                <div class="flex w-2/3 xl:w-1/3 items-center">
+                <div class="border-y-2 xl:border-y-0 xl:border-x-2 border-white w-1/2 xl:w-0 xl:h-24"/>
+                <div class="flex w-3/4 xl:w-1/3 items-center">
                     <Account color={'white'} width={200} height={200} />
                     <p class=" text-xl text-white font-sans font-medium">
                         The creation of user accounts lets you see your search history, enables you to save lists and favourite products.
@@ -122,8 +126,8 @@
             <div class="mx-auto flex flex-wrap gap-10 justify-center px-5 py-10">
                 {#each images as src}
                     <div class="p-2 rounded-xl bg-gradient-to-b from-rich-black to-primary shadow-xl flex justify-center items-center group">
-                        <img class="h-auto max-w-sm rounded-xl duration-300 group-hover:blur-sm group-hover:opacity-20" src={src.url} alt={src.description}/>
-                        <p class="absolute opacity-0 group-hover:opacity-100 duration-500 text-white max-w-sm">{src.content}</p>
+                        <img class="h-auto max-w-xs sm:max-w-sm rounded-xl duration-300 group-hover:blur-sm group-hover:opacity-20" src={src.url} alt={src.description}/>
+                        <p class="absolute opacity-0 group-hover:opacity-100 duration-500 text-white max-w-xs sm:max-w-sm text-sm sm:text-base">{src.content}</p>
                     </div>
                 {/each}
             </div>

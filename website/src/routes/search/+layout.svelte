@@ -45,7 +45,12 @@
 		$page.url.searchParams.set('q', search);
 		goto(`?${$page.url.searchParams.toString()}`);
 	}
+
+	let screenSize
+	let screenSmall = 640
 </script>
+
+<svelte:window bind:innerWidth={screenSize} />
 
 <!-- Slide Menu -->
 <div
@@ -100,37 +105,42 @@
 
 <!-- Main Nav Bar -->
 <div
-	class="fixed left-0 top-0 w-screen z-10 p-1 md:py-4 md:px-6 flex space-x-2 md:space-x-4 bg-primary shadow-lg"
+	class="fixed left-0 top-0 w-screen z-10 py-1 px-4 md:py-4 md:px-6 flex space-x-2 md:space-x-4 bg-primary shadow-lg"
 >
-	<h1 class="text-3xl text-white leading-normal"><a href="/">Groceriez</a></h1>
-	<div class="flex flex-1">
+	{#if screenSize > screenSmall}
+		<h1 class="text-3xl text-white leading-normal"><a href="/">Groceriez</a></h1>
+	{:else}
+		<h1 class="text-3xl text-white leading-normal"><a href="/">G</a></h1>
+	{/if}
+	<div class="flex grow">
 		<form on:submit|preventDefault={() => searchItems()} class="flex p-2 rounded-lg flex-1">
 			<input
 				bind:value={search}
-				class="p-2 rounded-l-lg w-3/4 border-y border-l-2 border-accent shadow-md bg-gradient-to-b focus:outline-none"
+				class="p-2 rounded-l-lg w-3/4 border-y border-l-2 border-accent shadow-md bg-gradient-to-b focus:outline-none grow md:grow-0"
 				placeholder="Search our Products"
 			/>
 			<button
 				type="submit"
-				class="p-2 rounded-r-lg border-y border-r-2 border-accent bg-accent bg-grad shadow-md w-16 flex justify-center"
+				class="p-2 rounded-r-lg border-y border-r-2 border-accent bg-accent bg-grad shadow-md md:w-16 flex justify-center"
 			>
 				<Magnify color={'white'} width={24} height={24} />
 			</button>
 		</form>
-		<div class="flex flex-col justify-center">
-			<button
-				class="flex-initial mx-14 flex hover:cursor-pointer text-white font-medium"
-				on:click|stopPropagation={toggleLocationModal}
-				on:keypress|stopPropagation={toggleLocationModal}
-				aria-label="Change Location"
-			>
-				<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
-				<div class="flex flex-col items-start">
-					<span>{$userLocation.city}, {$userLocation.province}</span>
-					<span class="text-xs">Change Location</span>
-				</div>
-			</button>
-		</div>
+		
+	</div>
+	<div class="flex flex-col justify-center">
+		<button
+			class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
+			on:click|stopPropagation={toggleLocationModal}
+			on:keypress|stopPropagation={toggleLocationModal}
+			aria-label="Change Location"
+		>
+			<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
+			<div class="flex flex-col items-start">
+				<span>{$userLocation.city}, {$userLocation.province}</span>
+				<span class="text-xs">Change Location</span>
+			</div>
+		</button>
 	</div>
 	<button
 		class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
