@@ -67,9 +67,8 @@ def test_add_loblaws_stores():
         {'name': 'Loblaws 2', 'address': '456 Queen St', 'city': 'Montreal', 'province': 'QC', 'postal_code': 'H1H 1H1'},
     ]
     ins.add_loblaws_stores(loblaws_stores)
-
     for store in loblaws_stores:
-        doc_ref = FH.db.collection('stores').document(store['name'])
+        doc_ref = ins.db.collection('stores').document(store['name'])
         doc = doc_ref.get()
         assert doc.exists
         assert doc.to_dict() == store
