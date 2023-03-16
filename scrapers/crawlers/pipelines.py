@@ -1,58 +1,33 @@
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from FirestoreHelper import FirestoreHelper
-from RealtimeDbHelper import RealtimeDbHelper
 
 class ProductPipeline:
-    
-    def __init__(self):
-        self.count = 0
-        self.num_existing = 0
-    
+
     def open_spider(self, spider):
         self.client = FirestoreHelper()
         
-    def close_spider(self, spider):
-        self.count = 0
-        self.num_existing = 0
-        
     def process_item(self, item, spider):
-        self.count += 1
-        
-        # if we've at least processed 30 products and 75% of them already exist
-        # stop reading / writing to Firestore to save on costs and time
-        if self.count > 30 and self.num_existing / self.count > 0.75:
-            return item
-        
+        store_type = spider.storeType
+        store_firebase_id = spider.firestoreId
         adapter = ItemAdapter(item)
         sku = adapter.get('SKU')
+        price = adapter.get('price')
+        inStock = adapter.get('inStock', True)
         
-        existing = self.client.get_base_product(sku)
-        if existing is not None:
-            self.num_existing += 1
-            return item
-        else:
-            self.client.save_base_product(adapter, spider.storeType)
-            return item
-        
-        
-class ProductPricesPipeline:
-    
-    def open_spider(self, spider):
-        self.client = RealtimeDbHelper()
-        
-    def close_spider(self, spider):
-        pass
-    
-    def process_item(self, item, spider):
-        adapter = ItemAdapter(item)
-        if adapter.get('price') is None:
+        if sku is None:
+            raise DropItem(f'Missing SKU: {item}')
+        if price is None:
             raise DropItem(f'Missing price: {item}')
+        
+        base_product = self.client.get_base_product(sku)
+        if base_product is not None:
+            self.client.handle_store_price(base_product['id'], store_firebase_id, adapter, inStock)
         else:
-            self.client.save_product_price(spider.storeType, spider.storeId, adapter)
-            return item
-    
+            self.client.add_product_and_store_price(adapter, store_firebase_id, store_type)
+        return item
 
+  
 class DuplicatesPipeline:
     
     def __init__(self):
