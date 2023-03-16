@@ -106,11 +106,21 @@ class SleepRetryMiddleware(RetryMiddleware):
     def __init__(self, settings):
         RetryMiddleware.__init__(self, settings)
         
-    
     def process_response(self, request, response, spider):
         # They're on to us!
         # If the sever is blocking the requests, wait 90 seconds and retry
-        if response.status in [400, 408, 429]:
+        if 'blocked' in response.url:
+            url = response.headers.get('referer')
+            if url is not None:
+                request.url = url
+                print("")
+                print(url)
+                print("Request blocked, pausing 20 seconds before retrying...")
+                sleep(20)
+                print("Resuming request...")
+                reason = response_status_message(response.status)
+                return self._retry(request, reason, spider) or response
+        elif response.status in [400, 408, 429]:
             print("Request blocked, pausing 90 seconds before retrying...")
             sleep(90)
             print("Resuming request...")

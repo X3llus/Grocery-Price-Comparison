@@ -9,11 +9,18 @@ from crawlers.utils import format_product, get_price_request_body, trim_price_re
 class WalmartSpider(scrapy.Spider):
   name = 'walmart'
   allowed_domains = ['walmart.ca']
+  storeId = '3153'
+  storeType = 'walmart'
+  custom_settings = {
+    'CONCURRENT_REQUESTS': 1,
+    'DOWNLOAD_DELAY': 17,
+    'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
+  }
   
   
   def start_requests(self):
-    if self.storeId is None:
-      raise ValueError("Missing storeId parameter")
+    storeId = '3153'
+    storeType = 'walmart'
     
     for key in walmart_categories:
       payload = { 'experience': 'grocery', 'lang': 'en', 'c': walmart_categories[key], 'p': 1 }
@@ -28,30 +35,33 @@ class WalmartSpider(scrapy.Spider):
   # 4. Repeat steps 1 - 3 with incremented page number until all pages have been fetched
   def parse_category(self, response, category, page):
     print(f'Fetching page {page} for category {category}...')
-    json_response = json.loads(response.text)
-    
-    totalResults = json_response['pagination']['totalResults']
-    pageSize = json_response['pagination']['pageSize']
-    
-    products = [format_product(p) for p in list(json_response['items']['products'].values())]
-    products = [p for p in products if p is not None]
-    
-    productsToFetch = json_response['items']['productsToFetch']
-    
-    data = { 'lang': 'en', 'products': productsToFetch }
-    yield JsonRequest(url='https://www.walmart.ca/api/bsp/fetch-products?experience=grocery', method='POST', data=data, callback=self.parse_additional_products, cb_kwargs=dict(products=products))
-
-    if page == 1:
-      maxPage = totalResults // pageSize
-      # limiting to 6 pages for now (360 products per category)
-      if maxPage > 6:
-        maxPage = 6
+    try:
+      json_response = json.loads(response.text)
       
-      for p in range(2, maxPage + 1):
-        print(f'Fetching page {p} of {maxPage} for category {category}...')
-        payload = { 'experience': 'grocery', 'lang': 'en', 'c': walmart_categories[category], 'p': p }
-        url = 'https://www.walmart.ca/api/bsp/browse?' + urlencode(payload)
-        yield scrapy.Request(url=url, callback=self.parse_category, cb_kwargs=dict(category=category, page=p))
+      totalResults = json_response['pagination']['totalResults']
+      pageSize = json_response['pagination']['pageSize']
+      
+      products = [format_product(p) for p in list(json_response['items']['products'].values())]
+      products = [p for p in products if p is not None]
+      
+      productsToFetch = json_response['items']['productsToFetch']
+      
+      data = { 'lang': 'en', 'products': productsToFetch }
+      yield JsonRequest(url='https://www.walmart.ca/api/bsp/fetch-products?experience=grocery', method='POST', data=data, callback=self.parse_additional_products, cb_kwargs=dict(products=products))
+      
+      if page == 1:
+        maxPage = totalResults // pageSize
+        if maxPage > 6:
+          maxPage = 6
+        
+        for p in range(2, maxPage + 1):
+          print(f'Fetching page {p} of {maxPage} for category {category}...')
+          payload = { 'experience': 'grocery', 'lang': 'en', 'c': walmart_categories[category], 'p': p }
+          url = 'https://www.walmart.ca/api/bsp/browse?' + urlencode(payload)
+          yield scrapy.Request(url=url, callback=self.parse_category, cb_kwargs=dict(category=category, page=p))
+    except Exception as e:
+      print('Error parsing category: ' + category)
+      print(e)
     
   
   def parse_additional_products(self, response, products):
