@@ -23,7 +23,8 @@ def crawl(stores):
   
   for store in stores:
     storeType = str(store['type']).lower()
-    storeId = store['storeId'] 
+    storeId = store['storeId']
+    storeGeoPoint = store['geoPoint']
     firestoreId = store['id'] # reference to the key in firestore
     count += 1
     
@@ -44,7 +45,7 @@ def crawl(stores):
     else:
       spider_name = 'loblaws'
       
-    yield process.crawl(spider_name, storeId=storeId, storeType=storeType, firestoreId=firestoreId)
+    yield process.crawl(spider_name, storeId=storeId, storeType=storeType, storeGeoPoint=storeGeoPoint, firestoreId=firestoreId)
   reactor.stop()
   
 def run(stores):

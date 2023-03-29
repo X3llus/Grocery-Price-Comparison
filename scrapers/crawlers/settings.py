@@ -74,6 +74,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'crawlers.pipelines.DuplicatesPipeline': 300,
+    'crawlers.pipelines.ProductImagePipeline': 400,
     'crawlers.pipelines.ProductPipeline': 500,
     # 'crawlers.pipelines.StoreLocationPipeline': 700,
 }

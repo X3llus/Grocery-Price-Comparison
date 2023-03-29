@@ -67,7 +67,7 @@ class LoblawsSpider(scrapy.Spider):
     totalResults = json_response['pagination']['totalResults']
     print(f'Found {totalResults} products for category {category}')
     
-    products = [format_loblaws_product(p) for p in list(json_response['results'].values())]
+    products = [format_loblaws_product(p) for p in list(json_response['results'])]
     products = [p for p in products if p is not None]
     
     for product in products:
