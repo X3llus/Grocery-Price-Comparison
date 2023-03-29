@@ -1,5 +1,6 @@
-from common import find_latitude_longitude_range, format_base_product
+from common import find_latitude_longitude_range, format_base_product, format_product_price
 import firebase_admin
+import traceback
 from firebase_admin import credentials
 from firebase_admin import firestore
 
@@ -24,14 +25,17 @@ class FirestoreHelper():
   def get_local_stores(self, lat, long, radius):
     range = find_latitude_longitude_range(lat, long, radius)
     
-    stores = self.db.collection(u'Stores')\
+    stores_query = self.db.collection(u'Stores')\
     .where(u'geoPoint.longitude', u'>=', range['lon_min'])\
-    .where(u'geoPoint.longitude', u'<=', range['lon_max'])\
-    .stream()
+    .where(u'geoPoint.longitude', u'<=', range['lon_max'])
     
-    stores = [store.to_dict() for store in stores]
+    stores = []
+    for store in stores_query.stream():
+      store_dict = store.to_dict()
+      store_dict['id'] = store.reference.id
+      stores.append(store_dict)
+    
     stores = [store for store in stores if store['geoPoint']['latitude'] >= range['lat_min'] and store['geoPoint']['latitude'] <= range['lat_max']]
-    
     return stores
     
 
@@ -58,19 +62,67 @@ class FirestoreHelper():
 
   def get_base_product(self, sku):
     existing = self.db.collection(u'Products')\
-      .where(u'SKU', u'==', sku)\
+      .where(u'skus', u'array_contains', sku)\
       .get()
       
     if len(list(existing)) == 0:
       return None
     else:
-      return list(existing)[0].to_dict()
+      try:        
+        product_dict = list(existing)[0].to_dict()
+        product_dict['id'] = list(existing)[0].id
+        return product_dict
+      except Exception:
+        print(traceback.format_exc())
+        return None
     
 
-  def save_base_product(self, product, store_type):
-    base_product = format_base_product(product, store_type)
-    self.db.collection(u'Products').add(base_product)
-    
+  def add_product_and_store_price(self, store_firestore_id, store_geo_point, store_type, product):
+    try:
+      product_data = format_base_product(product)
+      price_data = format_product_price(product, store_firestore_id, store_geo_point, store_type)
+      product_data['data'] = [price_data]
+      
+      self.db.collection(u'Products').add(product_data)
+    except Exception:
+      print(traceback.format_exc())
+
     
   def save_store(self, store):
     self.db.collection(u'Stores').add(store)
+   
+  
+  # updates or creates store price data for a product
+  def handle_store_price(self, product_firestore_id, store_firestore_id, store_geo_point, store_type, product):
+    try:
+      store_price_dict = format_product_price(product, store_firestore_id, store_geo_point, store_type)
+      
+      existing_product = self.db.collection('Products')\
+        .document(product_firestore_id)\
+        .get()\
+        .to_dict()
+        
+      new_store_price_arr = existing_product.get('data', [])
+        
+      for i, item in enumerate(new_store_price_arr):
+        if item.get('storeId') == store_firestore_id:
+          new_store_price_arr[i] = store_price_dict
+          break
+      else:
+        new_store_price_arr.append(store_price_dict)
+      
+      self.db.collection('Products')\
+        .document(product_firestore_id)\
+        .update({u'data': new_store_price_arr})
+      
+    except Exception:
+      print(traceback.format_exc())
+
+    
+  def delete_store_price(self, productId, storeId):
+    product_ref = self.db.collection(u'Products').document(productId)
+    store_price_doc = product_ref.collection(u'StorePrices').document(storeId)
+    
+    if store_price_doc.get().exists:
+      store_price_doc.delete()
+    

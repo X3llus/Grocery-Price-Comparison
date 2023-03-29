@@ -4,12 +4,15 @@ import json
 from scrapy.http.request.json_request import JsonRequest
 from crawlers.data import walmart_categories
 from crawlers.items import ProductItem
-from crawlers.utils import format_product, get_price_request_body, trim_price_response
+from crawlers.utils import format_walmart_product, get_price_request_body, trim_price_response
 
 class WalmartSpider(scrapy.Spider):
   name = 'walmart'
   allowed_domains = ['walmart.ca']
   
+  custom_settings = {
+    'RETRY_TIMES': 1
+  }
   
   def start_requests(self):
     if self.storeId is None:
@@ -27,13 +30,13 @@ class WalmartSpider(scrapy.Spider):
   # 3. Hit /price-offer to get the price of each product on the page
   # 4. Repeat steps 1 - 3 with incremented page number until all pages have been fetched
   def parse_category(self, response, category, page):
-    print(f'Fetching page {page} for category {category}...')
     json_response = json.loads(response.text)
     
     totalResults = json_response['pagination']['totalResults']
     pageSize = json_response['pagination']['pageSize']
+    print(f'Found {totalResults} products for category {category}')
     
-    products = [format_product(p) for p in list(json_response['items']['products'].values())]
+    products = [format_walmart_product(p) for p in list(json_response['items']['products'].values())]
     products = [p for p in products if p is not None]
     
     productsToFetch = json_response['items']['productsToFetch']
@@ -43,6 +46,7 @@ class WalmartSpider(scrapy.Spider):
 
     if page == 1:
       maxPage = totalResults // pageSize
+      
       # limiting to 6 pages for now (360 products per category)
       if maxPage > 6:
         maxPage = 6
@@ -57,7 +61,7 @@ class WalmartSpider(scrapy.Spider):
   def parse_additional_products(self, response, products):
     json_response = json.loads(response.text)
     
-    additionalProducts = [format_product(p) for p in list(json_response['products'].values())]
+    additionalProducts = [format_walmart_product(p) for p in list(json_response['products'].values())]
     additionalProducts = [p for p in additionalProducts if p is not None]
     products.extend(additionalProducts)
     
@@ -69,6 +73,7 @@ class WalmartSpider(scrapy.Spider):
     json_response = json.loads(response.text)
     
     prices = [trim_price_response(p) for p in list(json_response['offers'].values())]
+    prices = [p for p in prices if p is not None]
     
     for product in products:
       if len(product['SKU']) == 0:

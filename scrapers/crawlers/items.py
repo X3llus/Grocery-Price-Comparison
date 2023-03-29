@@ -17,3 +17,4 @@ class ProductItem(scrapy.Item):
     dateExtracted = Field()
     SKU = Field()
     category = Field()
+    inStock = Field()
