@@ -4,6 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.exceptions import CloseSpider
 from scrapy.downloadermiddlewares.retry import RetryMiddleware
 from scrapy.utils.response import response_status_message
 from time import sleep
@@ -36,11 +37,10 @@ class CrawlersSpiderMiddleware:
             yield i
 
     def process_spider_exception(self, response, exception, spider):
-        # Called when a spider or process_spider_input() method
-        # (from other spider middleware) raises an exception.
-
-        # Should return either None or an iterable of Request or item objects.
-        pass
+        if spider.name == 'metro' and response.status in [400, 403, 408, 429]:
+            raise CloseSpider('Metro is down')
+        else:
+            pass
 
     def process_start_requests(self, start_requests, spider):
         # Called with the start requests of the spider, and works
@@ -109,19 +109,8 @@ class SleepRetryMiddleware(RetryMiddleware):
     def process_response(self, request, response, spider):
         # They're on to us!
         # If the sever is blocking the requests, wait 90 seconds and retry
-        if 'blocked' in response.url:
-            url = response.headers.get('referer')
-            if url is not None:
-                request.url = url
-                print("")
-                print(url)
-                print("Request blocked, pausing 20 seconds before retrying...")
-                sleep(20)
-                print("Resuming request...")
-                reason = response_status_message(response.status)
-                return self._retry(request, reason, spider) or response
-        elif response.status in [400, 408, 429]:
-            print("Request blocked, pausing 90 seconds before retrying...")
+        if response.status in [400, 403, 408, 429]:
+            print("Request blocked, pausing 90 sec before retrying...")
             sleep(90)
             print("Resuming request...")
             reason = response_status_message(response.status)

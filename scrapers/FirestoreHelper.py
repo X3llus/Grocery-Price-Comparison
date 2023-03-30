@@ -62,7 +62,7 @@ class FirestoreHelper():
 
   def get_base_product(self, sku):
     existing = self.db.collection(u'Products')\
-      .where(u'SKU', u'==', sku)\
+      .where(u'skus', u'array_contains', sku)\
       .get()
       
     if len(list(existing)) == 0:
@@ -77,16 +77,13 @@ class FirestoreHelper():
         return None
     
 
-  def add_product_and_store_price(self, product, store_id, store_type):
+  def add_product_and_store_price(self, store_firestore_id, store_geo_point, store_type, product):
     try:
-      product_data = format_base_product(product, store_type)
-      price_data = format_product_price(product)
-      batch = self.db.batch()
-      product_ref = self.db.collection('Products').document()
-      batch.set(product_ref, product_data)
-      store_price_ref = product_ref.collection('StorePrices').document(store_id)
-      batch.set(store_price_ref, price_data)
-      batch.commit()
+      product_data = format_base_product(product)
+      price_data = format_product_price(product, store_firestore_id, store_geo_point, store_type)
+      product_data['data'] = [price_data]
+      
+      self.db.collection(u'Products').add(product_data)
     except Exception:
       print(traceback.format_exc())
 
@@ -95,23 +92,29 @@ class FirestoreHelper():
     self.db.collection(u'Stores').add(store)
    
   
-  # adds store price to product if product is in stock, else deletes store price
-  def handle_store_price(self, product_firestore_id, store_firestore_id, product, inStock=True):
+  # updates or creates store price data for a product
+  def handle_store_price(self, product_firestore_id, store_firestore_id, store_geo_point, store_type, product):
     try:
-      store_price_data = format_product_price(product)
+      store_price_dict = format_product_price(product, store_firestore_id, store_geo_point, store_type)
       
-      product_ref = self.db.collection('Products').document(product_firestore_id)
-      store_prices_ref = product_ref.collection('StorePrices')
-      
-      # # Check if the sub-collection exists, create it if it doesn't
-      if not store_prices_ref.get():
-        store_prices_ref.document()  # creates an empty document to create the sub-collection
-      
-      if inStock:
-        store_price_doc_ref = store_prices_ref.document(store_firestore_id)
-        store_price_doc_ref.set(store_price_data)
+      existing_product = self.db.collection('Products')\
+        .document(product_firestore_id)\
+        .get()\
+        .to_dict()
+        
+      new_store_price_arr = existing_product.get('data', [])
+        
+      for i, item in enumerate(new_store_price_arr):
+        if item.get('storeId') == store_firestore_id:
+          new_store_price_arr[i] = store_price_dict
+          break
       else:
-        self.delete_store_price(product_firestore_id, store_firestore_id)
+        new_store_price_arr.append(store_price_dict)
+      
+      self.db.collection('Products')\
+        .document(product_firestore_id)\
+        .update({u'data': new_store_price_arr})
+      
     except Exception:
       print(traceback.format_exc())
 

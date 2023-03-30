@@ -10,10 +10,10 @@ class ProductPipeline:
     def process_item(self, item, spider):
         store_type = spider.storeType
         store_firebase_id = spider.firestoreId
+        store_geo_point = spider.storeGeoPoint
         adapter = ItemAdapter(item)
         sku = adapter.get('SKU')
         price = adapter.get('price')
-        inStock = adapter.get('inStock', True)
         
         if sku is None:
             raise DropItem(f'Missing SKU: {item}')
@@ -22,9 +22,9 @@ class ProductPipeline:
         
         base_product = self.client.get_base_product(sku)
         if base_product is not None:
-            self.client.handle_store_price(base_product['id'], store_firebase_id, adapter, inStock)
+            self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
         else:
-            self.client.add_product_and_store_price(adapter, store_firebase_id, store_type)
+            self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
         return item
 
   
@@ -44,6 +44,16 @@ class DuplicatesPipeline:
             self.seen.add(sku)
             return item
         
+class ProductImagePipeline:
+    
+    def process_item(self, item, spider):
+        adapter = ItemAdapter(item)
+        image_url = adapter.get('imageUrl')
+        if image_url is None:
+            return item
+        elif 'icon-no-picture' in image_url:
+          item['imageUrl'] = None
+        return item
         
 class StoreLocationPipeline:
     

@@ -13,6 +13,8 @@ class LoblawsSpider(scrapy.Spider):
   custom_settings = {
     'CONCURRENT_REQUESTS': 16,
     'CONCURRENT_REQUESTS_PER_DOMAIN': 16,
+    'DOWNLOAD_DELAY': 3,
+    'AUTOTHROTTLE_START_DELAY': 3
   }
   
   base_request_body = {
@@ -32,6 +34,9 @@ class LoblawsSpider(scrapy.Spider):
   def start_requests(self):
     if self.storeId is None or self.storeType is None:
       raise ValueError("Missing storeId or storeType parameters")
+    
+    print(f'Fetching products for store {self.storeId} ({self.storeType})...')
+    print(f'firestoreId: {self.firestoreId}')
     
     for key in loblaws_categories:
       request_body = {
@@ -60,8 +65,9 @@ class LoblawsSpider(scrapy.Spider):
     json_response = json.loads(response.text)
     
     totalResults = json_response['pagination']['totalResults']
+    print(f'Found {totalResults} products for category {category}')
     
-    products = [format_loblaws_product(p) for p in list(json_response['results'].values())]
+    products = [format_loblaws_product(p) for p in list(json_response['results'])]
     products = [p for p in products if p is not None]
     
     for product in products:
