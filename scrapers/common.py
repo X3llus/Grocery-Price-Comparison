@@ -58,21 +58,31 @@ def get_closest_store(user_lat, user_lng, stores):
   return closest_store
 
 
-def format_base_product(product, store_type):
+def format_base_product(product):
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': product.get('imageUrl', ""),
-    'packageSize': product.get('packageSize', ""),
-    'SKU': product.get('SKU', ""),
-    'parentCompany': store_type,
+    'size': product.get('packageSize', ""),
+    'skus': [product.get('SKU', "")],
+    'unit': product.get('normalizedPrice', {}).get('unit', 'ea'),
   }
 
 
-def format_product_price(product):
+# If the data for the store already exists, updates it. Otherwise, adds it.
+def format_product_price(product, store_firestore_id, store_geo_point, store_type):
   return {
-    'inStock': product.get('inStock', True),
+    'geoloc': {
+      'latitude': store_geo_point['latitude'],
+      'longitude': store_geo_point['longitude']
+    },
+    'normalized': {
+      'quantity': product.get('normalizedPrice', {}).get('quantity', 1),
+      'unit': product.get('normalizedPrice', {}).get('unit', 'ea'),
+      'value': product.get('normalizedPrice', {}).get('value', 0)
+    },
     'price': product.get('price', 0),
-    'normalizedPrice': product.get('normalizedPrice', {}),
+    'storeId': store_firestore_id,
+    'storeName': store_type,
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }

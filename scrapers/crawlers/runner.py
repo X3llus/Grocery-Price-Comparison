@@ -19,10 +19,16 @@ process = CrawlerRunner(settings)
 @defer.inlineCallbacks
 def crawl(stores):
   has_seen_metro = False
+  count = 0
   
   for store in stores:
     storeType = str(store['type']).lower()
     storeId = store['storeId']
+    storeGeoPoint = store['geoPoint']
+    firestoreId = store['id'] # reference to the key in firestore
+    count += 1
+    
+    print(f'Processing {storeType} store. Store {count} of {len(stores)}...')  
     
     # Only need to process one metro store since prices are the same for all
     if storeType == 'metro':
@@ -30,8 +36,6 @@ def crawl(stores):
         continue
       else:
         has_seen_metro = True
-
-    print(f'\nProcessing {storeType} store {store["storeId"]}\n')
     
     spider_name = ''
     if storeType == 'metro':
@@ -41,7 +45,7 @@ def crawl(stores):
     else:
       spider_name = 'loblaws'
       
-    yield process.crawl(spider_name, storeId=storeId, storeType=storeType)
+    yield process.crawl(spider_name, storeId=storeId, storeType=storeType, storeGeoPoint=storeGeoPoint, firestoreId=firestoreId)
   reactor.stop()
   
 def run(stores):

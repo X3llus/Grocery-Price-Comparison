@@ -3,13 +3,14 @@ import time
 from crawlers.utils import format_metro_product
 
 class MetroSpider(scrapy.Spider):
+  handle_httpstatus_list = [403, 429]
   name = 'metro'
   allowed_domains = ['metro.ca']
   start_urls = ['https://www.metro.ca/en/online-grocery/search']
   
   custom_settings = {
-    'DOWNLOAD_DELAY': 16,
-    'AUTOTHROTTLE_START_DELAY': 16,
+    'DOWNLOAD_DELAY': 25,
+    'AUTOTHROTTLE_START_DELAY': 25,
     'CONCURRENT_REQUESTS': 1,
     'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
   }

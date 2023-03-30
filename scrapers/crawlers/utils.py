@@ -15,7 +15,7 @@ def get_store_fsa(storeId, stores):
     return fsa
 
 
-def format_product(product: Dict) -> Dict:
+def format_walmart_product(product: Dict) -> Dict:
   try:
     id = product.get('id')
     name = product.get('name')
@@ -47,7 +47,7 @@ def format_loblaws_product(product: Dict) -> Dict:
   try:
     price = product.get('prices', {}).get('price', {}).get('value', 0)
   except:
-    price = 0
+    return None
     
   try:
     image_url = product.get('imageAssets', [{}])[0].get('mediumUrl', "")
@@ -156,6 +156,9 @@ def trim_price_response(response: Dict) -> Dict:
   unit = response.get('priceCompUomCd', None)
   sku = response.get('offerId', None)
   price = response.get('currentPrice', None)
+  
+  if price is None:
+    return None
   
   return {
     'sku': sku,
