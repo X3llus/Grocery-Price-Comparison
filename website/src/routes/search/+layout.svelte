@@ -42,7 +42,7 @@
 			hitsPerPage: 30,
 		});
 		searchStore.set(hits.hits);
-		console.log(hits.hits);
+
 		$page.url.searchParams.set('q', search);
 		goto(`?${$page.url.searchParams.toString()}`);
 	}
@@ -180,7 +180,6 @@
 <!-- Location Modal -->
 <Modal visible={locationModalOpen} onClose={toggleLocationModal}>
 	<span slot="title">Change Location</span>
-	<span slot="subtitle">Click and drag the marker to set a new location</span>
 	<StoreMap />
 </Modal>
 

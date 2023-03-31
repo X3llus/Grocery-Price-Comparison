@@ -1,36 +1,38 @@
 <script>
 	import { fly, fade } from 'svelte/transition';
-	import Close from 'svelte-material-icons/Close.svelte'
+	import Close from 'svelte-material-icons/Close.svelte';
 
 	export let visible = false;
 	export let onClose;
+	let screenSize;
 
 	const handleClose = () => {
 		onClose();
 	};
 </script>
 
+<svelte:window bind:innerWidth={screenSize} />
+
 {#if visible}
-	<div
-		class="modal"
-		transition:fly={{ y: -150, duration: 250 }}
-	>
+	<div class="modal" transition:fly={{ y: -150, duration: 250 }}>
 		<div class="header">
 			<h2 class="title">
 				<slot name="title" />
 			</h2>
-			<p class="subtitle">
-				<slot name="subtitle" />
-			</p>
+			{#if screenSize > 640}
+				<p class="subtitle">
+					<slot name="subtitle" />
+				</p>
+			{/if}
 			<div class="close-container">
-			<div class="close-background">
-				<div class="close" on:click={handleClose} on:keydown={handleClose}>
-					<Close />
+				<div class="close-background">
+					<div class="close" on:click={handleClose} on:keydown={handleClose}>
+						<Close />
+					</div>
 				</div>
 			</div>
 		</div>
-		</div>
-		
+
 		<slot />
 
 		<slot name="footer" />
@@ -43,15 +45,15 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		width: 70vw;
-		height: 70vh;
-		padding: 15px;
+		width: 60vw;
+		height: 80vh;
+		padding: 10px;
 		background: #fff;
 		z-index: 3;
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -47.5%);
 		border-radius: 6px;
 	}
 
@@ -89,46 +91,46 @@
 
 	.close {
 		cursor: pointer;
-    color: rgb(28, 30, 33);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    z-index: 3;
+		color: rgb(28, 30, 33);
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 20px;
+		height: 20px;
+		background-color: transparent;
+		z-index: 3;
 	}
 
 	.close-background {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #bdbdbd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
+		position: absolute;
+		top: -5px;
+		right: -5px;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background-color: #eeeeee;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 2;
 		transition: background-color 0.2s ease-in-out;
-  }
+	}
 
 	.close-background:hover {
-		background-color: #eeeeee;
+		background-color: #bdbdbd;
 	}
 	.close-container {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-  }
+		position: absolute;
+		top: 15px;
+		right: 15px;
+	}
 
 	@media screen and (max-width: 500px) {
 		.modal {
 			width: 95vw;
-			height: 75vh;
-			margin-top: 5vh;
+			height: 90vh;
+			margin-top: 1vh;
 			padding: 5px;
 		}
 

@@ -34,42 +34,45 @@
 		map.addControl(new mapbox.GeolocateControl());
 
 		map.on('load', () => {
-			// Circle to represent the search radius
-			map.addLayer({
-				id: 'search-radius',
-				type: 'circle',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: [$userLocation.longitude, $userLocation.latitude],
+			const layers = map.getStyle().layers;
+			const hasRadiusLayer = layers.find((layer) => layer.id === 'search-radius');
+			if (!hasRadiusLayer) {
+				map.addLayer({
+					id: 'search-radius',
+					type: 'circle',
+					source: {
+						type: 'geojson',
+						data: {
+							type: 'Feature',
+							geometry: {
+								type: 'Point',
+								coordinates: [$userLocation.longitude, $userLocation.latitude],
+							},
 						},
 					},
-				},
-				paint: {
-					'circle-radius': radiusInPixels,
-					'circle-color': '#007cbf',
-					'circle-opacity': 0.3,
-					'circle-stroke-width': 2,
-					'circle-stroke-color': '#007cbf',
-					'circle-stroke-opacity': 0.75,
-				},
-			})
-		})
+					paint: {
+						'circle-radius': radiusInPixels,
+						'circle-color': '#007cbf',
+						'circle-opacity': 0.3,
+						'circle-stroke-width': 2,
+						'circle-stroke-color': '#007cbf',
+						'circle-stroke-opacity': 0.75,
+					},
+				});
+			}
 
-		map.on('zoom', () => {
-			zoom = map.getZoom();
+			map.on('zoom', () => {
+				zoom = map.getZoom();
+			});
+			map.resize();
 		});
-		map.resize();
 	}
 
 	beforeUpdate(() => {
 		if (map && map.isStyleLoaded()) {
 			map.setPaintProperty('search-radius', 'circle-radius', radiusInPixels);
 		}
-	})
+	});
 
 	onDestroy(() => {
 		if (map) {

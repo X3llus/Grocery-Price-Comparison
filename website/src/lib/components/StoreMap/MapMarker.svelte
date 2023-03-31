@@ -13,19 +13,19 @@
 	export let address = null;
 	export let draggable = false;
 
-	const popup = new mapbox.Popup({ offset: 25 })
+	const popup = new mapbox.Popup({ offset: 25 });
 
 	if (address) {
 		// TODO: add styling to the popup
 		popup.setHTML(`<h3>${type}</h3><p>${address}</p>`);
 	} else {
-		popup.setHTML(`<h3>${type}</h3>`)
+		popup.setHTML(`<h3>${type}</h3>`);
 	}
 
 	let marker;
 
 	if (type === 'You') {
-		marker = new mapbox.Marker({ draggable })
+		marker = new mapbox.Marker({ draggable });
 	} else {
 		const { file, width, height } = getMapIcon(type);
 		const el = document.createElement('div');
@@ -34,12 +34,10 @@
 		el.style.width = `${width}px`;
 		el.style.height = `${height}px`;
 		el.style.backgroundSize = 'cover';
-		marker = new mapbox.Marker(el)
+		marker = new mapbox.Marker(el);
 	}
 
-	marker.setLngLat([lon, lat])
-			.setPopup(popup)
-			.addTo(map);
+	marker.setLngLat([lon, lat]).setPopup(popup).addTo(map);
 
 	const onDragEnd = async () => {
 		const lngLat = marker.getLngLat();
@@ -53,9 +51,10 @@
 			},
 		});
 
+		// Update the user location store
 		await updateUserLocation({
 			latitude: lngLat.lat,
-			longitude: lngLat.lng
+			longitude: lngLat.lng,
 		});
 	};
 
