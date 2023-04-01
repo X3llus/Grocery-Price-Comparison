@@ -44,7 +44,7 @@
 			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
 			aroundRadius: $searchRadius * 1000,
 		});
-		
+
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
 		}
@@ -55,8 +55,8 @@
 		goto(`?${$page.url.searchParams.toString()}`);
 	}
 
-	let screenSize
-	let screenSmall = 640
+	let screenSize;
+	let screenSmall = 640;
 </script>
 
 <svelte:window bind:innerWidth={screenSize} />
@@ -68,12 +68,9 @@
 >
 	<div class="h-full bg-background flex flex-col">
 		<div class="grid grid-cols-3">
-			<button
-				class="ml-2"
-				on:click={() => (sideOpen = !sideOpen)}
-			>
-			<Arrow color={'black'} width={32} height={32} />
-		</button>
+			<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
+				<Arrow color={'black'} width={32} height={32} />
+			</button>
 			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
 		</div>
 		<ul class="flex-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
@@ -143,56 +140,55 @@
 				<Magnify color={'white'} width={24} height={24} />
 			</button>
 		</form>
-		
 	</div>
 	{#if screenSize > screenSmall}
-	<div class="flex flex-col justify-center">
+		<div class="flex flex-col justify-center">
+			<button
+				class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
+				on:click|stopPropagation={toggleLocationModal}
+				on:keypress|stopPropagation={toggleLocationModal}
+				aria-label="Change Location"
+			>
+				<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
+				<div class="flex flex-col items-start">
+					<span>{$userLocation.city}, {$userLocation.province}</span>
+					<span class="text-xs">Change Location</span>
+				</div>
+			</button>
+		</div>
 		<button
-			class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
-			on:click|stopPropagation={toggleLocationModal}
-			on:keypress|stopPropagation={toggleLocationModal}
-			aria-label="Change Location"
+			class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
+			on:click={() => (sideOpen = !sideOpen)}
+			aria-label="Cart"
 		>
-			<div class="flex flex-col justify-center"><MapMarker width={22} height={22} /></div>
-			<div class="flex flex-col items-start">
-				<span>{$userLocation.city}, {$userLocation.province}</span>
-				<span class="text-xs">Change Location</span>
-			</div>
+			<ListBox color={'black'} width={24} height={24} />
 		</button>
-	</div>
-	<button
-		class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
-		on:click={() => (sideOpen = !sideOpen)}
-		aria-label="Cart"
-	>
-		<ListBox color={'black'} width={24} height={24} />
-	</button>
 	{:else}
-	<div class="flex flex-col justify-center">
-		<button
-			class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
-			on:click|stopPropagation={toggleLocationModal}
-			on:keypress|stopPropagation={toggleLocationModal}
-			aria-label="Change Location"
-		>
-			<div class="flex flex-col justify-center" title="{$userLocation.city}, {$userLocation.province}"><MapMarker width={22} height={22} /></div>
+		<div class="flex flex-col justify-center">
+			<button
+				class="flex-initial flex hover:cursor-pointer text-white font-medium md:mx-14"
+				on:click|stopPropagation={toggleLocationModal}
+				on:keypress|stopPropagation={toggleLocationModal}
+				aria-label="Change Location"
+			>
+				<div
+					class="flex flex-col justify-center"
+					title="{$userLocation.city}, {$userLocation.province}"
+				>
+					<MapMarker width={22} height={22} />
+				</div>
+			</button>
+		</div>
+		<button class="" on:click={() => (sideOpen = !sideOpen)} aria-label="Cart">
+			<ListBox color={'white'} width={24} height={24} />
 		</button>
-	</div>
-	<button
-		class=""
-		on:click={() => (sideOpen = !sideOpen)}
-		aria-label="Cart"
-	>
-		<ListBox color={'white'} width={24} height={24} />
-	</button>
 	{/if}
 </div>
 
 <!-- Location Modal -->
 <Modal visible={locationModalOpen} onClose={toggleLocationModal}>
 	<span slot="title">Change Location</span>
-	<span slot="subtitle">Click and drag the marker to set a new location</span>
-	<StoreMap />
+	<StoreMap closeModal={toggleLocationModal} />
 </Modal>
 
 <div class="z-0 min-h-screen pt-20 bg-background">

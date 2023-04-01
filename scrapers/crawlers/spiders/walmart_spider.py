@@ -9,14 +9,21 @@ from crawlers.utils import format_walmart_product, get_price_request_body, trim_
 class WalmartSpider(scrapy.Spider):
   name = 'walmart'
   allowed_domains = ['walmart.ca']
+  storeId = '3153'
+  storeType = 'walmart'
+  custom_settings = {
+    'CONCURRENT_REQUESTS': 1,
+    'DOWNLOAD_DELAY': 17,
+    'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
+  }
   
   custom_settings = {
     'RETRY_TIMES': 1
   }
   
   def start_requests(self):
-    if self.storeId is None:
-      raise ValueError("Missing storeId parameter")
+    storeId = '3153'
+    storeType = 'walmart'
     
     for key in walmart_categories:
       payload = { 'experience': 'grocery', 'lang': 'en', 'c': walmart_categories[key], 'p': 1 }
