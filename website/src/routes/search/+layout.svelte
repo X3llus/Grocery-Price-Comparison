@@ -7,7 +7,7 @@
 	import Delete from 'svelte-material-icons/Delete.svelte';
 	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
 	import { Modal, StoreMap } from '$lib/components';
-	import { userLocation, updateUserLocation } from '$lib/stores';
+	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
 	import { goto } from '$app/navigation';
 	import { searchListStore, searchStore } from '$lib/searchStore';
@@ -21,7 +21,7 @@
 		import.meta.env.VITE_ALGOLIA_APP_ID,
 		import.meta.env.VITE_ALGOLIA_SEARCH_KEY
 	);
-	const index = client.initIndex('ITEMS');
+	const index = client.initIndex('Products');
 
 	onMount(async () => {
 		// saves the user's location to the store & local storage
@@ -38,9 +38,17 @@
 	};
 
 	async function searchItems() {
+		console.log(`${$userLocation.latitude}, ${$userLocation.longitude}`);
 		let hits = await index.search(search + ' ', {
 			hitsPerPage: 30,
+			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
+			aroundRadius: $searchRadius * 1000,
 		});
+		
+		if (typeof hits.hits == 'object') {
+			hits.hits = [hits.hits];
+		}
+		console.log(hits.hits);
 		searchStore.set(hits.hits);
 
 		$page.url.searchParams.set('q', search);
