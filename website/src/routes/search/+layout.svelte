@@ -44,7 +44,7 @@
 			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
 			aroundRadius: $searchRadius * 1000,
 		});
-		
+
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
 		}
@@ -188,7 +188,7 @@
 <!-- Location Modal -->
 <Modal visible={locationModalOpen} onClose={toggleLocationModal}>
 	<span slot="title">Change Location</span>
-	<StoreMap />
+	<StoreMap closeModal={toggleLocationModal} />
 </Modal>
 
 <div class="z-0 min-h-screen pt-20 bg-background">

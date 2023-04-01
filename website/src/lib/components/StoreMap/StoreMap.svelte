@@ -8,6 +8,7 @@
 	import { userLocation, searchRadius, localStores, updateUserLocation } from '$lib/stores';
 	import { PUBLIC_MAPBOX_ACCESS_TOKEN } from '$env/static/public';
 
+	export let closeModal;
 	let screenSize;
 	let numStores = 0;
 	let autoFillResponse = null;
@@ -56,6 +57,7 @@
 	const handleAddressClick = async () => {
 		if (autoFillResponse) {
 			await updateUserLocation(autoFillResponse);
+			closeModal();
 		}
 	};
 </script>
@@ -87,7 +89,7 @@
 				{/if}
 				to update store search area
 			</label>
-			<div class="relative mb-4">
+			<div class="relative mb-3">
 				<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
 					<MapMarkerIcon color={'gray'} width={24} height={24} />
 				</div>
@@ -112,10 +114,10 @@
 			</div>
 		</form>
 		<div class="radius-container">
-			<p style="font-size: 1.1rem; align-self: flex-end;">
+			<p style="font-size: 1.1rem;">
 				Search radius: <span style="font-size: 1.25rem; font-weight: 600;">{$searchRadius}km</span>
 			</p>
-			<div style="display: flex; flex-direction: column; margin-left: 1rem">
+			<div style="display: flex; flex-direction: column;">
 				<label for="radius" style="margin-right: 0.5rem; font-size: 0.85rem;">Set radius</label>
 				<input type="range" bind:value={$searchRadius} min="3" max="75" />
 			</div>
@@ -165,20 +167,23 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0.5rem 0.5rem 0.1rem 0.5rem;
+		margin-top: 0.25rem;
 	}
 
 	.location-input-container {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		width: 80%;
+		width: 70%;
 		margin-right: auto;
 	}
 
 	.radius-container {
 		display: flex;
-		width: 100%;
+		flex-direction: column;
+		width: 40%;
 		margin-bottom: 1rem;
+		margin-right: auto;
 	}
 
 	.store-counter {
@@ -189,6 +194,7 @@
 	@media screen and (max-width: 500px) {
 		.info-container {
 			padding: 0 0.5rem 0.25rem 0.5rem;
+			margin-top: 0.25rem;
 		}
 
 		.store-counter {
@@ -198,6 +204,11 @@
 
 		.radius-container {
 			justify-content: space-around;
+			width: 90%;
+		}
+
+		.location-input-container {
+			width: 90%;
 		}
 	}
 </style>
