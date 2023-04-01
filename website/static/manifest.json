@@ -1,0 +1,25 @@
+{
+  "background_color": "#ffffff",
+  "description": "Your one stop shop for all your grocery needs",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Groceriez",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Groceriez",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "categories": [
+    "food"
+  ],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "GroceriezLogo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "en"
+}

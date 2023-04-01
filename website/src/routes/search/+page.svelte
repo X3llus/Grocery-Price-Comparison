@@ -7,48 +7,8 @@
 
 	searchStore.subscribe((value) => {
 		if (value.length === 0) return;
-		hits = [];
-
-		// read the documents from firestore
-		const docs = value.map((doc) => doc.path);
-		docs.forEach(async (path) => {
-			const _doc = await getDoc(doc(db, path));
-			// get the store from realtime database
-			const _ref = ref(rtdb);
-			let snapshot;
-
-			switch (_doc.data().parentCompany) {
-				case 'Loblaws':
-					snapshot = await get(child(_ref, `store-prices/zehrs-0559-${_doc.data().SKU}`));
-					break;
-
-				case 'Metro':
-					snapshot = await get(child(_ref, `store-prices/Metro-0000-${_doc.data().SKU}`));
-					break;
-
-				case 'Walmart':
-					snapshot = await get(child(_ref, `store-prices/walmart-3153-${_doc.data().SKU}`));
-					break;
-
-				default:
-					break;
-			}
-
-			try {
-				const price = snapshot.exists() ? snapshot.val().price : null;
-				if (price === null) return;
-
-				// add to hits
-				hits = [
-					...hits,
-					{
-						id: _doc.id,
-						..._doc.data(),
-						price,
-					},
-				];
-			} catch (error) {}
-		});
+		console.log(value);
+		hits = value[0];
 	});
 
 	function addToList(i) {
@@ -89,24 +49,24 @@
 					</h2>
 				{/if}
 				<div class="border m-1" />
-				<div class="p-1">
+				<!-- <div class="p-1">
 					<div class="flex justify-between">
 						<h3 class="text-rich-black font-medium text-md">Store</h3>
 						<h3 class="text-rich-black font-medium text-md">{hit.parentCompany}</h3>
 					</div>
-				</div>
-				{#if hit.packageSize}
+				</div> -->
+				{#if hit.size}
 					<div class="p-1">
 						<div class="flex justify-between">
 							<h3 class="text-rich-black font-medium text-md">Size</h3>
-							<h3 class="text-rich-black font-medium text-md">{hit.packageSize}</h3>
+							<h3 class="text-rich-black font-medium text-md">{hit.size}{hit.unit}</h3>
 						</div>
 					</div>
 				{/if}
 				<div class="p-1">
 					<div class="flex justify-between">
 						<h3 class="text-rich-black font-medium text-md">Price</h3>
-						<h3 class="text-rich-black font-medium text-md">${hit.price.toFixed(2)}</h3>
+						<h3 class="text-rich-black font-medium text-md">${hit.data[0].price}</h3>
 					</div>
 				</div>
 				<button
