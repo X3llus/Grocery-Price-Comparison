@@ -58,21 +58,22 @@ def get_closest_store(user_lat, user_lng, stores):
   return closest_store
 
 
-def format_base_product(product):
+def format_base_product(product, store_geo_point):
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': product.get('imageUrl', ""),
-    'size': product.get('packageSize', ""),
+    'size': product.get('packageSize', 1),
     'skus': [product.get('SKU', "")],
     'unit': product.get('normalizedPrice', {}).get('unit', 'ea'),
+    '_geoloc': [store_geo_point]
   }
 
 
 # If the data for the store already exists, updates it. Otherwise, adds it.
 def format_product_price(product, store_firestore_id, store_geo_point, store_type):
   return {
-    'geoloc': {
+    '_geoloc': {
       'latitude': store_geo_point['latitude'],
       'longitude': store_geo_point['longitude']
     },
@@ -86,3 +87,14 @@ def format_product_price(product, store_firestore_id, store_geo_point, store_typ
     'storeName': store_type,
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
+  
+def add_store_geo_location(existing_geo_loc_array, store_geo_loc):
+  if existing_geo_loc_array is None:
+    return [store_geo_loc]
+  else:
+    for geo_loc in existing_geo_loc_array:
+      if geo_loc['latitude'] == store_geo_loc['latitude'] and geo_loc['longitude'] == store_geo_loc['longitude']:
+        return existing_geo_loc_array
+      
+    existing_geo_loc_array.append(store_geo_loc)
+    return existing_geo_loc_array

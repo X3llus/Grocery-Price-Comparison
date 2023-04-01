@@ -1,4 +1,4 @@
-from common import find_latitude_longitude_range, format_base_product, format_product_price
+from common import find_latitude_longitude_range, format_base_product, format_product_price, add_store_geo_location
 import firebase_admin
 import traceback
 from firebase_admin import credentials
@@ -79,7 +79,7 @@ class FirestoreHelper():
 
   def add_product_and_store_price(self, store_firestore_id, store_geo_point, store_type, product):
     try:
-      product_data = format_base_product(product)
+      product_data = format_base_product(product, store_geo_point)
       price_data = format_product_price(product, store_firestore_id, store_geo_point, store_type)
       product_data['data'] = [price_data]
       
@@ -102,18 +102,24 @@ class FirestoreHelper():
         .get()\
         .to_dict()
         
-      new_store_price_arr = existing_product.get('data', [])
+      existing_store_price_arr = existing_product.get('data', [])
         
-      for i, item in enumerate(new_store_price_arr):
+      for i, item in enumerate(existing_store_price_arr):
         if item.get('storeId') == store_firestore_id:
-          new_store_price_arr[i] = store_price_dict
+          existing_store_price_arr[i] = store_price_dict
           break
       else:
-        new_store_price_arr.append(store_price_dict)
+        existing_store_price_arr.append(store_price_dict)
+        
+      existing_geo_loc_array = existing_product.get('_geoloc', None)
+      updated_geo_loc_array = add_store_geo_location(existing_geo_loc_array, store_geo_point)
       
       self.db.collection('Products')\
         .document(product_firestore_id)\
-        .update({u'data': new_store_price_arr})
+        .update({
+          u'data': existing_store_price_arr,
+          u'_geoloc': updated_geo_loc_array
+        })
       
     except Exception:
       print(traceback.format_exc())
