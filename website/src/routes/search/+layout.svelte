@@ -81,8 +81,8 @@
 				<li class="py-3 sm:pb-4 px-0.5 flex">
 					<img class="w-16 h-16" src={item.imageUrl} alt="" />
 					<div class="flex flex-col flex-1">
-						<span class="text-sm font-medium">{item.name} - {item.parentCompany}</span>
-						<span class="text-sm font-medium">${item.price.toFixed(2)}</span>
+						<span class="text-sm font-medium">{item.name} - {item.storeName}</span>
+						<span class="text-sm font-medium">${item.price}</span>
 					</div>
 					<button
 						class="rounded-full w-10 h-10 flex justify-center items-center"
