@@ -36,6 +36,9 @@ class ProductPipeline:
                 product_brand_size = self.client.get_product_brand_size(brand, size)
                 name = name.split(",")
                 name = name[0].split(" ")
+                
+                matched_product = None
+                
                 for product in name: #looking for brand name in array
                     if product == brand:
                         name.remove(product)
@@ -58,11 +61,11 @@ class ProductPipeline:
                     addBestMatch /= n
                     if(addBestMatch > bestFuzzyMatch): #holding the value of the highest best_match from all product names (with same brand and size) in firestore
                         bestFuzzyMatch = addBestMatch
-                        newSKU = array['skus']
+                        matched_product = array
+                        
                 if(bestFuzzyMatch >= 0.95): #intergity with small chance of scraping error
-                    enter_product = self.client.get_base_product(newSKU)
-                    if enter_product is not None:
-                        self.client.handle_store_price(enter_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
+                    if matched_product is not None:
+                        self.client.handle_store_price(matched_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
                     else:
                         self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
                 else:
