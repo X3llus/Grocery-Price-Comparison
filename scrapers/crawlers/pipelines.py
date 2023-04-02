@@ -44,6 +44,27 @@ class ProductPipeline:
                     for brandRemoval in nameCheck:
                         if brandRemoval == brand:
                             nameCheck.remove(brandRemoval)
+                    if(len(name) > len(nameCheck)):
+                        print("the array of words in firestore is larger than name we are checking")
+                        n = len(nameCheck) * 100
+                        for check in nameCheck:
+                            # print(stringarray)
+                            best_match = process.extractOne(check, name)
+                            addBestMatch += best_match[1]
+                            # print(addBestMatch)
+                    else: 
+                        n = len(name) * 100
+                        for check in name:
+                            # print(search)
+                            best_match = process.extractOne(check, nameCheck)
+                            addBestMatch += best_match[1]
+                            # print(addBestMatch)
+                    addBestMatch /= n
+                    if(addBestMatch > bestMatchSku):
+                        bestMatchSku = addBestMatch
+                        # newSKU = array['skus']
+                    if(addBestMatch >= 0.95): #intergity with small chance of scraping error
+                            print("this is a good match with " + str(addBestMatch))
                 return None
         return item
 
