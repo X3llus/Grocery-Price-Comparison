@@ -1,6 +1,7 @@
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from FirestoreHelper import FirestoreHelper
+from fuzzywuzzy import process
 
 class ProductPipeline:
 
@@ -14,6 +15,7 @@ class ProductPipeline:
         adapter = ItemAdapter(item)
         sku = adapter.get('SKU')
         price = adapter.get('price')
+
         
         if sku is None:
             raise DropItem(f'Missing SKU: {item}')
@@ -27,6 +29,21 @@ class ProductPipeline:
             if adapter.get('storeId') == 'vg8P4HYZAYdDY3LjyIap':
                 self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
             else:
+                brand = adapter.get('brand') #only grabbing brand, size, name if else runs
+                size = adapter.get('size')
+                name = adapter.get('name')
+                product_brand_size = self.client.get_product_brand_size(brand, size)
+                name = name.split(",")
+                name = name[0].split(" ")
+                for product in name: #looking for brand name in array
+                    if product == brand:
+                        name.remove(product)
+                for array in product_brand_size: #iterating through arrayof examples
+                    nameCheck = array['name'].split(",")
+                    nameCheck = nameCheck[0].split(" ")
+                    for brandRemoval in nameCheck:
+                        if brandRemoval == brand:
+                            nameCheck.remove(brandRemoval)
                 return None
         return item
 
