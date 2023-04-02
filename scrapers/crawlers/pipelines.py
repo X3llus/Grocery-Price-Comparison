@@ -24,32 +24,10 @@ class ProductPipeline:
         if base_product is not None:
             self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
         else:
-            self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
-        return item
-
-class ProductPipelineNameComparison:
-
-    def open_spider(self, spider):
-        self.client = FirestoreHelper()
-        
-    def process_item(self, item, spider):
-        store_type = spider.storeType
-        store_firebase_id = spider.firestoreId
-        store_geo_point = spider.storeGeoPoint
-        adapter = ItemAdapter(item)
-        sku = adapter.get('SKU')
-        price = adapter.get('price')
-        
-        if sku is None:
-            raise DropItem(f'Missing SKU: {item}')
-        if price is None:
-            raise DropItem(f'Missing price: {item}')
-        
-        base_product = self.client.get_base_product(sku)
-        if base_product is not None:
-            self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
-        else:
-            self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
+            if adapter.get('storeId') == 'vg8P4HYZAYdDY3LjyIap':
+                self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
+            else:
+                return None
         return item
 
   
