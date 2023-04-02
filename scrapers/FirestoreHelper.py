@@ -131,14 +131,16 @@ class FirestoreHelper():
     
     if store_price_doc.get().exists:
       store_price_doc.delete()
-  def GetProductsWithSameBrandAndPackageSize(brand: str, size: float):
-      db = firestore.Client()
-      matching_products = db.collection(u'Products').where(u'brand', u'==', brand).where(u'size', u'==', size).get()
 
+  def get_pruduct_brand_size(self, brand, size):
+      matching_products = self.db.collection(u'Products').where(u'brand', u'==', brand).where(u'size', u'==', size).get()
       if len(list(matching_products)) == 0:
         return None
       else:
-        product_dict = list(matching_products)[0].to_dict()
-        product_dict['id'] = list(matching_products)[0].id
-        return product_dict
+        try:
+          product_dict = list(matching_products)[0].to_dict()
+          product_dict['id'] = list(matching_products)[0].id
+          return product_dict
+        except:
+          print(traceback.format_exc())
     
