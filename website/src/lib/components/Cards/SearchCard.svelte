@@ -8,7 +8,6 @@
 
     function addProduct(i) {
 		dispatch('product', {i});
-        console.log(i);
 	}
 
 </script>

@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { getDoc, doc, db, rtdb, ref, child, get } from '$lib/firebase.js';
 	import { onDestroy } from 'svelte';
 	import { SearchCard } from '$lib/components';
+	import { element } from 'svelte/internal';
 
 	let hits = [];
 
@@ -13,7 +14,17 @@
 	});
 
 	function addToList(event) {
-		searchListStore.update((value) => [...value, hits[event.detail.i]]);
+		if ($searchListStore.length === 0) {
+			return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+		}
+		$searchListStore.forEach((element) => {
+			if (element.objectID != hits[event.detail.i].objectID) {
+				return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			}
+			element.quanity++;
+			
+			console.log($searchListStore);
+		});
 	}
 
 	onDestroy(() => {
