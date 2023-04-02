@@ -132,7 +132,7 @@ class FirestoreHelper():
     if store_price_doc.get().exists:
       store_price_doc.delete()
 
-  def get_pruduct_brand_size(self, brand, size):
+  def get_product_brand_size(self, brand, size):
       matching_products = self.db.collection(u'Products').where(u'brand', u'==', brand).where(u'size', u'==', size).get()
       if len(list(matching_products)) == 0:
         return None
