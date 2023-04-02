@@ -18,9 +18,9 @@ def main():
   print(stores[0])
 
   
-  # scrapy_run(stores)
+  scrapy_run(stores)
   
-  # print(f'\nAll stores complete. Total time: {time.time() - start_time} seconds.')
+  print(f'\nAll stores complete. Total time: {time.time() - start_time} seconds.')
 
   
 if __name__ == '__main__':
