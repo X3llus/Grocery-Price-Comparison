@@ -29,6 +29,7 @@ class ProductPipeline:
             if adapter.get('storeId') == 'vg8P4HYZAYdDY3LjyIap':
                 self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
             else:
+                bestFuzzyMatch = 0
                 brand = adapter.get('brand') #only grabbing brand, size, name if else runs
                 size = adapter.get('size')
                 name = adapter.get('name')
@@ -45,27 +46,25 @@ class ProductPipeline:
                         if brandRemoval == brand:
                             nameCheck.remove(brandRemoval)
                     if(len(name) > len(nameCheck)):
-                        print("the array of words in firestore is larger than name we are checking")
                         n = len(nameCheck) * 100
                         for check in nameCheck:
-                            # print(stringarray)
                             best_match = process.extractOne(check, name)
                             addBestMatch += best_match[1]
-                            # print(addBestMatch)
                     else: 
                         n = len(name) * 100
                         for check in name:
-                            # print(search)
                             best_match = process.extractOne(check, nameCheck)
                             addBestMatch += best_match[1]
-                            # print(addBestMatch)
                     addBestMatch /= n
-                    if(addBestMatch > bestMatchSku):
-                        bestMatchSku = addBestMatch
-                        # newSKU = array['skus']
-                    if(addBestMatch >= 0.95): #intergity with small chance of scraping error
-                            print("this is a good match with " + str(addBestMatch))
-                return None
+                    if(addBestMatch > bestFuzzyMatch): #holding the value of the highest best_match from all product names (with same brand and size) in firestore
+                        bestFuzzyMatch = addBestMatch
+                        newSKU = array['skus']
+                if(bestFuzzyMatch >= 0.95): #intergity with small chance of scraping error
+                    enter_product = self.client.get_base_product(newSKU)
+                    if enter_product is not None:
+                        self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
+                    else:
+                        self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
         return item
 
   
