@@ -67,7 +67,8 @@
 <svelte:head>
 	<!-- Load a bunch of different Mapbox scripts -->
 	<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet" />
-	<link href="https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css" rel="stylesheet" />
+	<!-- Why style Break? -->
+	<!-- <link href="https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css" rel="stylesheet" /> -->
 	<script
 		id="search-js"
 		defer
