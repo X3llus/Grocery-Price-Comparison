@@ -82,16 +82,13 @@
 					<img class="w-16 h-16" src={item.imageUrl} alt="" />
 					<div class="flex flex-col flex-1">
 						<span class="text-sm font-medium">{item.name} - {item.parentCompany}</span>
-						<span class="text-sm font-medium">${item.price.toFixed(2)}</span>
+						<span class="text-sm font-medium">${item.data[0].price.toFixed(2)}</span>
 					</div>
 					<button
 						class="rounded-full w-10 h-10 flex justify-center items-center"
 						aria-label="Remove from cart"
 						on:click={() => {
-							searchListStore.update((value) => {
-								value.splice(i, 1);
-								return value;
-							});
+							searchListStore.remove(i);
 						}}
 					>
 						<Delete width={24} height={24} />
@@ -161,7 +158,7 @@
 		</div>
 		<a
 			class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
-			href="/account"
+			href="/signin"
 			aria-label="Account"
 		>
 			<Account color={'black'} width={24} height={24} />
