@@ -39,19 +39,15 @@
 	};
 
 	async function searchItems() {
-		console.log(`${$userLocation.latitude}, ${$userLocation.longitude}`);
 		let hits = await index.search(search + ' ', {
 			hitsPerPage: 30,
 			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
 			aroundRadius: $searchRadius * 1000,
 		});
 
-		console.log(hits, $searchRadius, search);
-
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
 		}
-		console.log(hits.hits);
 		searchStore.set(hits.hits);
 
 		$page.url.searchParams.set('q', search);
@@ -86,7 +82,6 @@
 			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
 			<span
 				>${((list) => {
-					console.log(list)
 					return list.reduce((m, v) => m + +v.data[0].price*v.quanity, 0);
 				})($searchListStore).toFixed(2)}</span
 			>
