@@ -12,7 +12,8 @@
 	});
 
 	function addToList(i) {
-		searchListStore.update((value) => [...value, hits[i]]);
+		console.log(hits[i]);
+		searchListStore.add(hits[i]);
 	}
 
 	onDestroy(() => {

@@ -6,6 +6,7 @@
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 	import Delete from 'svelte-material-icons/Delete.svelte';
 	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
+	import Account from 'svelte-material-icons/Account.svelte';
 	import { Modal, StoreMap } from '$lib/components';
 	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
@@ -44,6 +45,8 @@
 			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
 			aroundRadius: $searchRadius * 1000,
 		});
+
+		console.log(hits, $searchRadius, search);
 
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
@@ -156,13 +159,13 @@
 				</div>
 			</button>
 		</div>
-		<button
+		<a
 			class="rounded-full bg-white w-12 h-12 flex justify-center items-center"
-			on:click={() => (sideOpen = !sideOpen)}
-			aria-label="Cart"
+			href="/account"
+			aria-label="Account"
 		>
-			<ListBox color={'black'} width={24} height={24} />
-		</button>
+			<Account color={'black'} width={24} height={24} />
+	</a>
 	{:else}
 		<div class="flex flex-col justify-center">
 			<button
@@ -194,3 +197,11 @@
 <div class="z-0 min-h-screen pt-20 bg-background">
 	<slot />
 </div>
+
+<button
+	class="fixed bottom-4 right-4 rounded-full bg-primary w-12 h-12 flex justify-center items-center"
+	on:click={() => (sideOpen = !sideOpen)}
+	aria-label="Cart"
+>
+	<ListBox color={'white'} width={24} height={24} />
+</button>
