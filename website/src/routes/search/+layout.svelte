@@ -76,17 +76,17 @@
 		</button>
 			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
 		</div>
-		<ul class="flex-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700 p-2">
+		<ul class="flex-1 space-y-2 p-2">
 			{#each $searchListStore as item, i}
 				<CartCard item={item} i={i} />
 			{/each}
 		</ul>
 		<div class="text-3xl p-8 flex justify-between">
 			<span>Total Price:</span>
-			<!-- Gets the sum of prices for all items -->
+			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
 			<span
 				>${((list) => {
-					return list.reduce((m, v) => m + +v.price, 0);
+					return list.reduce((m, v) => m + +v.data[0].price, 0);
 				})($searchListStore).toFixed(2)}</span
 			>
 		</div>

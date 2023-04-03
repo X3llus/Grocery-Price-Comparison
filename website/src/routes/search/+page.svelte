@@ -22,7 +22,6 @@
 				return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
 			}
 			element.quanity++;
-			
 			console.log($searchListStore);
 		});
 	}

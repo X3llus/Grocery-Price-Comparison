@@ -12,11 +12,11 @@
 
 </script>
 
-<div class="w-full border rounded-md shadow-lg overflow-hidden group bg-white">
+<div class="w-full border rounded-md shadow-lg overflow-hidden group bg-white flex flex-col justify-between">
     <img src={hit.imageUrl} alt={hit.name} class="w-full" />
     <div class="p-5">
         <h2
-            class="truncate text-primary text-xl font-sans font-medium group-hover:text-black"
+            class="truncate text-primary text-xl font-sans font-medium hover:text-black"
             data-tooltip-target="title"
             data-tooltip-placement="bottom"
             title="{hit.name}"
