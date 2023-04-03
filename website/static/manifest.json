@@ -7,7 +7,7 @@
   "orientation": "any",
   "scope": "/",
   "short_name": "Groceriez",
-  "start_url": "/",
+  "start_url": "/search",
   "theme_color": "#ffffff",
   "categories": [
     "food"

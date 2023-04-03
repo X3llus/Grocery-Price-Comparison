@@ -22,7 +22,11 @@ export {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	updateProfile,
-	sendPasswordResetEmail
+	sendPasswordResetEmail,
+	signOut,
+	onAuthStateChanged,
+	GoogleAuthProvider,
+	signInWithPopup,
 } from 'firebase/auth';
 let db = getFirestore(app);
 let rtdb = getDatabase(app);
