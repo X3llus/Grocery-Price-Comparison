@@ -45,7 +45,7 @@ def get_closest_store(user_lat, user_lng, stores):
   closest_distance = float('inf')
 
   for store in stores:
-    distance = distance_between_coords(user_lat, user_lng, store['geoPoint']['latitude'], store['geoPoint']['longitude'], "K")
+    distance = distance_between_coords(user_lat, user_lng, store['geoPoint']['lat'], store['geoPoint']['lng'], "K")
     if distance < closest_distance:
       closest_distance = distance
       closest_store = store
@@ -59,6 +59,12 @@ def get_closest_store(user_lat, user_lng, stores):
 
 
 def format_base_product(product, store_geo_point):
+  
+  simple_geo_point = {
+    'lat': store_geo_point['latitude'],
+    'lng': store_geo_point['longitude']
+  }
+  
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
@@ -66,7 +72,7 @@ def format_base_product(product, store_geo_point):
     'size': product.get('packageSize', 1),
     'skus': [product.get('SKU', "")],
     'unit': product.get('normalizedPrice', {}).get('unit', 'ea'),
-    '_geoloc': [store_geo_point]
+    '_geoloc': [simple_geo_point]
   }
 
 
@@ -74,8 +80,8 @@ def format_base_product(product, store_geo_point):
 def format_product_price(product, store_firestore_id, store_geo_point, store_type):
   return {
     '_geoloc': {
-      'latitude': store_geo_point['latitude'],
-      'longitude': store_geo_point['longitude']
+      'lat': store_geo_point['latitude'],
+      'lng': store_geo_point['longitude']
     },
     'normalized': {
       'quantity': product.get('normalizedPrice', {}).get('quantity', 1),
@@ -93,7 +99,7 @@ def add_store_geo_location(existing_geo_loc_array, store_geo_loc):
     return [store_geo_loc]
   else:
     for geo_loc in existing_geo_loc_array:
-      if geo_loc['latitude'] == store_geo_loc['latitude'] and geo_loc['longitude'] == store_geo_loc['longitude']:
+      if geo_loc['latitud'] == store_geo_loc['lat'] and geo_loc['lng'] == store_geo_loc['lng']:
         return existing_geo_loc_array
       
     existing_geo_loc_array.append(store_geo_loc)
