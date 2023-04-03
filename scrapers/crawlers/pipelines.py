@@ -26,7 +26,7 @@ class ProductPipeline:
         if base_product is not None:
             self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
         else:
-            if store_firebase_id == 'vg8P4HYZAYdDY3LjyIap':
+            if store_firebase_id == 'ZVXbkMJpMR58CmDzx0DU':
                 self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
             else:
                 bestFuzzyMatch = -1
