@@ -5,7 +5,6 @@
 		getAuth,
 		createUserWithEmailAndPassword,
 		signInWithEmailAndPassword,
-		updateProfile,
 		sendPasswordResetEmail,
 		signOut,
 		onAuthStateChanged,
@@ -16,7 +15,6 @@
 		db,
 		setDoc,
 	} from '$lib/firebase';
-	import { onMount } from 'svelte';
 
 	import Login from 'svelte-material-icons/Login.svelte';
 	import AccountPlus from 'svelte-material-icons/AccountPlus.svelte';
@@ -52,14 +50,10 @@
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
-			const data = docSnap.data();
-			// add user list to store
-			searchListStore.addMultiple(data.list);
-			return;
+			return searchListStore.set(docSnap.data().list);
 		}
 
 		// setup base document
-		console.log('No such document!');
 		const newDoc = await setDoc(doc(db, 'Users', uid), {
 			owner: uid,
 			list: [],
@@ -160,9 +154,9 @@
 					><AccountPlus width={21} height={21} />Register with Email</button
 				>
 				<button
-					on:click={() => goto('/')}
+					on:click={() => goto('/search')}
 					class="btn btn-primary w-56 mx-10 bg-primary text-white p-4 text-center rounded-full  flex justify-around"
-					>Home</button
+					>Search</button
 				>
 			</div>
 		{:else if state === 1}
