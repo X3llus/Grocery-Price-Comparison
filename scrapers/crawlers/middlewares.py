@@ -106,7 +106,6 @@ class SleepRetryMiddleware(RetryMiddleware):
     def __init__(self, settings):
         RetryMiddleware.__init__(self, settings)
         
-    
     def process_response(self, request, response, spider):
         # They're on to us!
         # If the sever is blocking the requests, wait 90 seconds and retry

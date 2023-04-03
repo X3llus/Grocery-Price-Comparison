@@ -45,7 +45,7 @@ def get_closest_store(user_lat, user_lng, stores):
   closest_distance = float('inf')
 
   for store in stores:
-    distance = distance_between_coords(user_lat, user_lng, store['geoPoint']['latitude'], store['geoPoint']['longitude'], "K")
+    distance = distance_between_coords(user_lat, user_lng, store['geoPoint']['lat'], store['geoPoint']['lng'], "K")
     if distance < closest_distance:
       closest_distance = distance
       closest_store = store
@@ -58,23 +58,30 @@ def get_closest_store(user_lat, user_lng, stores):
   return closest_store
 
 
-def format_base_product(product):
+def format_base_product(product, store_geo_point):
+  
+  simple_geo_point = {
+    'lat': store_geo_point['latitude'],
+    'lng': store_geo_point['longitude']
+  }
+  
   return {
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': product.get('imageUrl', ""),
-    'size': product.get('packageSize', ""),
+    'size': product.get('packageSize', 1),
     'skus': [product.get('SKU', "")],
     'unit': product.get('normalizedPrice', {}).get('unit', 'ea'),
+    '_geoloc': [simple_geo_point]
   }
 
 
 # If the data for the store already exists, updates it. Otherwise, adds it.
 def format_product_price(product, store_firestore_id, store_geo_point, store_type):
   return {
-    'geoloc': {
-      'latitude': store_geo_point['latitude'],
-      'longitude': store_geo_point['longitude']
+    '_geoloc': {
+      'lat': store_geo_point['latitude'],
+      'lng': store_geo_point['longitude']
     },
     'normalized': {
       'quantity': product.get('normalizedPrice', {}).get('quantity', 1),
@@ -86,3 +93,19 @@ def format_product_price(product, store_firestore_id, store_geo_point, store_typ
     'storeName': store_type,
     'dateExtracted': datetime.now().strftime("%d-%m-%Y %H:%M:%S")
   }
+  
+def add_store_geo_location(existing_geo_loc_array, store_geo_loc):
+  simple_geo_point = {
+    'lat': store_geo_loc['latitude'],
+    'lng': store_geo_loc['longitude']
+  }
+    
+  if existing_geo_loc_array is None:
+    return [simple_geo_point]
+  else:
+    for geo_loc in existing_geo_loc_array:
+      if geo_loc['lat'] == simple_geo_point['lat'] and geo_loc['lng'] == simple_geo_point['lng']:
+        return existing_geo_loc_array
+      
+    existing_geo_loc_array.append(simple_geo_point)
+    return existing_geo_loc_array

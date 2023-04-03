@@ -20,11 +20,12 @@ def format_walmart_product(product: Dict) -> Dict:
     id = product.get('id')
     name = product.get('name')
     sku = product.get('skuIds')
-    packageSize = product.get('description')
     skusObj = product.get('skus')
     firstSku = skusObj[sku[0]]
     brand = firstSku.get('brand', {}).get('name', "")
     image_url = firstSku.get('images', [{}])[0].get('thumbnail', {}).get('url', "")
+    size_str = product.get('description', '')
+    size = float(re.sub(r"[^0-9.]", '', size_str))
   except:
     return None
     
@@ -34,7 +35,7 @@ def format_walmart_product(product: Dict) -> Dict:
     'name': name,
     'brand': brand,
     'imageUrl': image_url,
-    'packageSize': packageSize,
+    'packageSize': size,
   }
   
   
@@ -46,6 +47,8 @@ def format_loblaws_product(product: Dict) -> Dict:
   
   try:
     price = product.get('prices', {}).get('price', {}).get('value', 0)
+    size_str = product.get('packageSize', "")
+    size = float(re.sub(r"[^0-9.]", '', size_str))
   except:
     return None
     
@@ -73,7 +76,7 @@ def format_loblaws_product(product: Dict) -> Dict:
     'name': product.get('name', ""),
     'brand': product.get('brand', ""),
     'imageUrl': image_url,
-    'packageSize': product.get('packageSize', ""),
+    'packageSize': size,
     'inStock': in_stock,
     'price': price,
     'normalizedPrice': {
@@ -111,13 +114,17 @@ def format_metro_product(product: Dict) -> Dict:
     value = float(value_str) if value_str else 0
     quantity = float(quantity_str) if quantity_str else 1
     unit = unit if unit else "ea"
+    
+    size_str = product.get('packageSize', "")
+    size = float(re.sub(r"[^0-9.]", '', size_str))
+    
       
     return {
       'name': product.get('name', ""),
       'brand': product.get('brand', ""),
       'category': product.get('category', ""),
       'imageUrl': product.get('imageUrl', ""),
-      'packageSize': product.get('packageSize', ""),
+      'packageSize': size,
       'price': price,
       'normalizedPrice': {
         'value': value,

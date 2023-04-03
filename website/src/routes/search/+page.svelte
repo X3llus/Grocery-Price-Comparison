@@ -1,34 +1,31 @@
 <script lang="ts">
 	import { searchListStore, searchStore } from '$lib/searchStore';
-	import { getDoc, doc, db, rtdb, ref, child, get } from '$lib/firebase.js';
 	import { onDestroy } from 'svelte';
 	import { SearchCard } from '$lib/components';
-	import { element } from 'svelte/internal';
 
 	let hits = [];
 
 	searchStore.subscribe((value) => {
 		if (value.length === 0) return;
-		console.log(value);
 		hits = value[0];
 	});
 
     function addToList(event) {
 		let foundMatch = false;
 		if ($searchListStore.length === 0) {
-			return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
 		}
 		$searchListStore.forEach((element) => {
 			if (element.objectID === hits[event.detail.i].objectID) {
 				element.quanity++;
 				foundMatch = true;
-				searchListStore.update((value) => value);
+				searchListStore.add((value) => value);
 				return;
 			}
 		});
 
 		if(!foundMatch) {
-			return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
 		}
 	}
 

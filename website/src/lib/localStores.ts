@@ -46,7 +46,7 @@ const fetchRegionalStores = async (lat: number, lon: number, radius: number): Pr
 };
 
 // Returns true if the local storage stores are within the given radius of the user's location
-const haveStoresAlready = (lat, lon, radius) => {
+const haveStoresAlready = (lat: number, lon: number, radius: number) => {
   try {
     const savedRegionalStores = JSON.parse(localStorage.getItem('regionalStores'));
     const { latMin, latMax, lonMin, lonMax } = findLatLonRange(lat, lon, radius);
@@ -60,7 +60,6 @@ const haveStoresAlready = (lat, lon, radius) => {
     return false;
   }
 }
-
 
 const addStoresToLocalStorage = (stores: Store[]) => {
   try {

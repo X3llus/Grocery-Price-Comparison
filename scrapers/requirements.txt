@@ -7,3 +7,4 @@ Scrapy==2.8.0
 scrapy-fake-useragent==1.4.4
 firebase-admin==6.1.0
 python-dotenv==0.21.1
+fuzzywuzzy==0.18.0
