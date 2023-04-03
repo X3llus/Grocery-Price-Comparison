@@ -86,7 +86,8 @@
 			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
 			<span
 				>${((list) => {
-					return list.reduce((m, v) => m + +v.data[0].price, 0);
+					console.log(list)
+					return list.reduce((m, v) => m + +v.data[0].price*v.quanity, 0);
 				})($searchListStore).toFixed(2)}</span
 			>
 		</div>

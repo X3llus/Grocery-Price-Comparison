@@ -13,17 +13,23 @@
 		hits = value[0];
 	});
 
-	function addToList(event) {
+    function addToList(event) {
+		let foundMatch = false;
 		if ($searchListStore.length === 0) {
 			return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
 		}
 		$searchListStore.forEach((element) => {
-			if (element.objectID != hits[event.detail.i].objectID) {
-				return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			if (element.objectID === hits[event.detail.i].objectID) {
+				element.quanity++;
+				foundMatch = true;
+				searchListStore.update((value) => value);
+				return;
 			}
-			element.quanity++;
-			console.log($searchListStore);
 		});
+
+		if(!foundMatch) {
+			return searchListStore.update((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+		}
 	}
 
 	onDestroy(() => {
