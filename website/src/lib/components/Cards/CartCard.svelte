@@ -12,7 +12,7 @@
 <li class="pt-3 bg-white rounded-md shadow-md overflow-hidden">
     <div class="flex">
         <img class="w-16 h-16" src={item.imageUrl} alt="" />
-        <div class="flex flex-col flex-1 pl-3">
+        <div class="flex flex-col flex-1 pl-3 w-0">
             <span class="text-sm font-medium truncate text-primary hover:text-black" title="{item.name}">{item.name}</span>
             <div class="flex justify-between">
                 <span class="text-sm font-medium capitalize">{item.data[0].storeName}</span>
