@@ -113,12 +113,19 @@ class FirestoreHelper():
         
       existing_geo_loc_array = existing_product.get('_geoloc', None)
       updated_geo_loc_array = add_store_geo_location(existing_geo_loc_array, store_geo_point)
-      
+
+      existing_sku_array = existing_product.get('skus', None)
+      adding_product_skus = product.get('SKU')
+
+      if adding_product_skus not in existing_sku_array:
+        existing_sku_array.append(adding_product_skus)
+
       self.db.collection('Products')\
         .document(product_firestore_id)\
         .update({
           u'data': existing_store_price_arr,
-          u'_geoloc': updated_geo_loc_array
+          u'_geoloc': updated_geo_loc_array,
+          u'skus': existing_sku_array
         })
       
     except Exception:
@@ -131,4 +138,17 @@ class FirestoreHelper():
     
     if store_price_doc.get().exists:
       store_price_doc.delete()
-    
+
+  def get_product_brand_size(self, brand, size):
+      matching_products_query = self.db.collection(u'Products')\
+        .where(u'brand', u'==', brand)\
+        .where(u'size', u'==', size)
+
+      products = []
+      for product in matching_products_query.stream():
+        product_dict = product.to_dict()
+        product_dict['id'] = product.reference.id
+        products.append(product_dict)
+        
+      return products
+  
