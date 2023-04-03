@@ -9,8 +9,6 @@ from crawlers.utils import format_walmart_product, get_price_request_body, trim_
 class WalmartSpider(scrapy.Spider):
   name = 'walmart'
   allowed_domains = ['walmart.ca']
-  storeId = '3153'
-  storeType = 'walmart'
   custom_settings = {
     'CONCURRENT_REQUESTS': 1,
     'DOWNLOAD_DELAY': 17,
@@ -22,8 +20,6 @@ class WalmartSpider(scrapy.Spider):
   }
   
   def start_requests(self):
-    storeId = '3153'
-    storeType = 'walmart'
     
     for key in walmart_categories:
       payload = { 'experience': 'grocery', 'lang': 'en', 'c': walmart_categories[key], 'p': 1 }
@@ -37,20 +33,24 @@ class WalmartSpider(scrapy.Spider):
   # 3. Hit /price-offer to get the price of each product on the page
   # 4. Repeat steps 1 - 3 with incremented page number until all pages have been fetched
   def parse_category(self, response, category, page):
-    json_response = json.loads(response.text)
+    try:
+      json_response = json.loads(response.text)
+      
+      totalResults = json_response['pagination']['totalResults']
+      pageSize = json_response['pagination']['pageSize']
+      print(f'Found {totalResults} products for category {category}')
+      
+      products = [format_walmart_product(p) for p in list(json_response['items']['products'].values())]
+      products = [p for p in products if p is not None]
+      
+      productsToFetch = json_response['items']['productsToFetch']
+      
+      data = { 'lang': 'en', 'products': productsToFetch }
+    except:
+      print(f'Error parsing category {category} page {page}')
     
-    totalResults = json_response['pagination']['totalResults']
-    pageSize = json_response['pagination']['pageSize']
-    print(f'Found {totalResults} products for category {category}')
-    
-    products = [format_walmart_product(p) for p in list(json_response['items']['products'].values())]
-    products = [p for p in products if p is not None]
-    
-    productsToFetch = json_response['items']['productsToFetch']
-    
-    data = { 'lang': 'en', 'products': productsToFetch }
     yield JsonRequest(url='https://www.walmart.ca/api/bsp/fetch-products?experience=grocery', method='POST', data=data, callback=self.parse_additional_products, cb_kwargs=dict(products=products))
-
+      
     if page == 1:
       maxPage = totalResults // pageSize
       
@@ -66,21 +66,28 @@ class WalmartSpider(scrapy.Spider):
     
   
   def parse_additional_products(self, response, products):
-    json_response = json.loads(response.text)
-    
-    additionalProducts = [format_walmart_product(p) for p in list(json_response['products'].values())]
-    additionalProducts = [p for p in additionalProducts if p is not None]
-    products.extend(additionalProducts)
-    
-    priceRequestData = get_price_request_body(products, self.storeId)
+    try:
+      json_response = json.loads(response.text)
+      
+      additionalProducts = [format_walmart_product(p) for p in list(json_response['products'].values())]
+      additionalProducts = [p for p in additionalProducts if p is not None]
+      products.extend(additionalProducts)
+      
+      priceRequestData = get_price_request_body(products, self.storeId)
+    except:
+      print('Error parsing additional products')
+      
     yield JsonRequest(url='https://www.walmart.ca/api/bsp/v2/price-offer', method='POST', data=priceRequestData, callback=self.parse_prices, cb_kwargs=dict(products=products))
-  
+
   
   def parse_prices(self, response, products):
-    json_response = json.loads(response.text)
-    
-    prices = [trim_price_response(p) for p in list(json_response['offers'].values())]
-    prices = [p for p in prices if p is not None]
+    try:
+      json_response = json.loads(response.text)
+      
+      prices = [trim_price_response(p) for p in list(json_response['offers'].values())]
+      prices = [p for p in prices if p is not None]
+    except:
+      print('Error parsing prices')
     
     for product in products:
       if len(product['SKU']) == 0:

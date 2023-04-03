@@ -18,7 +18,7 @@ def main():
   print(stores[0])
 
   # Move Orillia Zehrs to the front of the list
-  index_to_move = next((i for i, x in enumerate(stores) if x['type'] == 'zehrs'), None)
+  index_to_move = next((i for i, x in enumerate(stores) if x['type'] == 'Metro'), None)
   if index_to_move is not None:
     moved_dict = stores.pop(index_to_move)
     stores.insert(0, moved_dict)

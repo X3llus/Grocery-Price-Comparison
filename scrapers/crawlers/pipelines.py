@@ -2,6 +2,7 @@ from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 from FirestoreHelper import FirestoreHelper
 from fuzzywuzzy import process
+import traceback
 
 class ProductPipeline:
 
@@ -26,48 +27,58 @@ class ProductPipeline:
         if base_product is not None:
             self.client.handle_store_price(base_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
         else:
-            if store_firebase_id == 'ZVXbkMJpMR58CmDzx0DU':
+            bestFuzzyMatch = -1
+            brand = adapter.get('brand') #only grabbing brand, size, name if else runs
+            size = adapter.get('packageSize')
+            
+            product_brand_size = self.client.get_product_brand_size(brand, size)
+            if product_brand_size is None:
                 self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
             else:
-                bestFuzzyMatch = -1
-                brand = adapter.get('brand') #only grabbing brand, size, name if else runs
-                size = adapter.get('size')
-                name = adapter.get('name')
-                product_brand_size = self.client.get_product_brand_size(brand, size)
-                name = name.split(",")
-                name = name[0].split(" ")
-                
-                matched_product = None
-                
-                for product in name: #looking for brand name in array
-                    if product == brand:
-                        name.remove(product)
-                for array in product_brand_size: #iterating through arrayof examples
-                    nameCheck = array['name'].split(",")
-                    nameCheck = nameCheck[0].split(" ")
-                    for brandRemoval in nameCheck:
-                        if brandRemoval == brand:
-                            nameCheck.remove(brandRemoval)
-                    if(len(name) > len(nameCheck)):
-                        n = len(nameCheck) * 100
-                        for check in nameCheck:
-                            best_match = process.extractOne(check, name)
-                            addBestMatch += best_match[1]
-                    else: 
-                        n = len(name) * 100
-                        for check in name:
-                            best_match = process.extractOne(check, nameCheck)
-                            addBestMatch += best_match[1]
-                    addBestMatch /= n
-                    if(addBestMatch > bestFuzzyMatch): #holding the value of the highest best_match from all product names (with same brand and size) in firestore
-                        bestFuzzyMatch = addBestMatch
-                        matched_product = array
-                        
-                if(bestFuzzyMatch >= 0.95): #intergity with small chance of scraping error
-                    if matched_product is not None:
-                        self.client.handle_store_price(matched_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
-                    else:
-                        self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
+                try:
+                    name = adapter.get('name')
+                    name = name.split(",")
+                    name = name[0].split(" ")
+
+                    matched_product = None
+
+                    for product in name: #looking for brand name in array
+                        if product == brand:
+                            name.remove(product)
+                            
+                    for array in product_brand_size: #iterating through arrayof examples
+                        addBestMatch = 0
+                        nameCheck = array['name'].split(",")
+                        nameCheck = nameCheck[0].split(" ")
+                        for brandRemoval in nameCheck:
+                            if brandRemoval == brand:
+                                nameCheck.remove(brandRemoval)
+                        if(len(name) > len(nameCheck)):
+                            n = len(nameCheck) * 100
+                            for check in nameCheck:
+                                best_match = process.extractOne(check, name)
+                                addBestMatch += best_match[1]
+                        else: 
+                            n = len(name) * 100
+                            for check in name:
+                                best_match = process.extractOne(check, nameCheck)
+                                addBestMatch += best_match[1]
+                        addBestMatch /= n
+                        if(addBestMatch > bestFuzzyMatch): #holding the value of the highest best_match from all product names (with same brand and size) in firestore
+                            bestFuzzyMatch = addBestMatch
+                            matched_product = array
+                        addBestMatch = 0
+                except:
+                    print(traceback.format_exc())
+            
+            print("Best fuzzy match: " + bestFuzzyMatch)
+            print("Matched Product: " + str(matched_product))
+            if(bestFuzzyMatch >= 0.95): #intergity with small chance of scraping error
+                if matched_product is not None:
+                    print("\nAdding a store price to a matched existing product!!\n")
+                    print("Product name = " + adapter.get('name'))
+                    print("Product brand = " + adapter.get('brand'))
+                    self.client.handle_store_price(matched_product['id'], store_firebase_id, store_geo_point, store_type, adapter)
                 else:
                     self.client.add_product_and_store_price(store_firebase_id, store_geo_point, store_type, adapter)
         return item
