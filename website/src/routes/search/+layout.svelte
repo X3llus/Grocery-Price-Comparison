@@ -4,13 +4,13 @@
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
 	import ListBox from 'svelte-material-icons/ListBox.svelte';
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
-	import Delete from 'svelte-material-icons/Delete.svelte';
 	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
 	import { Modal, StoreMap } from '$lib/components';
 	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
 	import { goto } from '$app/navigation';
 	import { searchListStore, searchStore } from '$lib/searchStore';
+	import { CartCard } from '$lib/components';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
@@ -73,35 +73,18 @@
 			</button>
 			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
 		</div>
-		<ul class="flex-1 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+		<ul class="flex-1 space-y-2 p-2">
 			{#each $searchListStore as item, i}
-				<li class="py-3 sm:pb-4 px-0.5 flex">
-					<img class="w-16 h-16" src={item.imageUrl} alt="" />
-					<div class="flex flex-col flex-1">
-						<span class="text-sm font-medium">{item.name} - {item.parentCompany}</span>
-						<span class="text-sm font-medium">${item.price.toFixed(2)}</span>
-					</div>
-					<button
-						class="rounded-full w-10 h-10 flex justify-center items-center"
-						aria-label="Remove from cart"
-						on:click={() => {
-							searchListStore.update((value) => {
-								value.splice(i, 1);
-								return value;
-							});
-						}}
-					>
-						<Delete width={24} height={24} />
-					</button>
-				</li>
+				<CartCard item={item} i={i} />
 			{/each}
 		</ul>
 		<div class="text-3xl p-8 flex justify-between">
 			<span>Total Price:</span>
-			<!-- Gets the sum of prices for all items -->
+			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
 			<span
 				>${((list) => {
-					return list.reduce((m, v) => m + +v.price, 0);
+					console.log(list)
+					return list.reduce((m, v) => m + +v.data[0].price*v.quanity, 0);
 				})($searchListStore).toFixed(2)}</span
 			>
 		</div>
