@@ -95,12 +95,17 @@ def format_product_price(product, store_firestore_id, store_geo_point, store_typ
   }
   
 def add_store_geo_location(existing_geo_loc_array, store_geo_loc):
+  simple_geo_point = {
+    'lat': store_geo_loc['latitude'],
+    'lng': store_geo_loc['longitude']
+  }
+    
   if existing_geo_loc_array is None:
-    return [store_geo_loc]
+    return [simple_geo_point]
   else:
     for geo_loc in existing_geo_loc_array:
-      if geo_loc['latitud'] == store_geo_loc['lat'] and geo_loc['lng'] == store_geo_loc['lng']:
+      if geo_loc['lat'] == simple_geo_point['lat'] and geo_loc['lng'] == simple_geo_point['lng']:
         return existing_geo_loc_array
       
-    existing_geo_loc_array.append(store_geo_loc)
+    existing_geo_loc_array.append(simple_geo_point)
     return existing_geo_loc_array
