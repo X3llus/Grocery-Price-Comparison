@@ -28,7 +28,7 @@ def crawl(stores):
     firestoreId = store['id'] # reference to the key in firestore
     count += 1
     
-    print(f'Processing {storeType} store. Store {count} of {len(stores)}...')  
+    print(f'\nProcessing {storeType} store. Store {count} of {len(stores)}...')  
     
     # Only need to process one metro store since prices are the same for all
     if storeType == 'metro':

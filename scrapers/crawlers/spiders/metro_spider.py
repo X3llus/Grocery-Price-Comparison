@@ -1,5 +1,5 @@
 import scrapy
-import time
+import traceback
 from crawlers.utils import format_metro_product
 
 class MetroSpider(scrapy.Spider):
@@ -13,6 +13,7 @@ class MetroSpider(scrapy.Spider):
     'AUTOTHROTTLE_START_DELAY': 15,
     'CONCURRENT_REQUESTS': 1,
     'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
+    'CONCURRENT_ITEMS': 1,
   }
   
   def __init__(self, *args, **kwargs):
@@ -60,10 +61,10 @@ class MetroSpider(scrapy.Spider):
         }
         
         product = format_metro_product(product)
+        yield product
     except:
-      print('Error parsing product')
+      print(traceback.format_exc())
             
-    yield product
     
     # follow pagination links (should be about 700 pages)
     pagination_container = response.css('div.product-page-nav')

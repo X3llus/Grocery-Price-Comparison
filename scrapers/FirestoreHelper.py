@@ -140,15 +140,15 @@ class FirestoreHelper():
       store_price_doc.delete()
 
   def get_product_brand_size(self, brand, size):
-      matching_products = self.db.collection(u'Products').where(u'brand', u'==', brand).where(u'size', u'==', size).get()
-      if len(list(matching_products)) == 0:
-        return None
-      else:
-        try:
-          products = []
-          for product in list(matching_products):
-            products.append(product.to_dict())
-          return products
-        except:
-          print(traceback.format_exc())
-    
+      matching_products_query = self.db.collection(u'Products')\
+        .where(u'brand', u'==', brand)\
+        .where(u'size', u'==', size)
+
+      products = []
+      for product in matching_products_query.stream():
+        product_dict = product.to_dict()
+        product_dict['id'] = product.reference.id
+        products.append(product_dict)
+        
+      return products
+  

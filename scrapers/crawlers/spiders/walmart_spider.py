@@ -13,11 +13,9 @@ class WalmartSpider(scrapy.Spider):
     'CONCURRENT_REQUESTS': 1,
     'DOWNLOAD_DELAY': 17,
     'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
-  }
-  
-  custom_settings = {
     'RETRY_TIMES': 1
   }
+  
   
   def start_requests(self):
     

@@ -35,8 +35,6 @@ class LoblawsSpider(scrapy.Spider):
     if self.storeId is None or self.storeType is None:
       raise ValueError("Missing storeId or storeType parameters")
     
-    print(f'Fetching products for store {self.storeId} ({self.storeType})...')
-    print(f'firestoreId: {self.firestoreId}')
     
     for key in loblaws_categories:
       request_body = {
@@ -65,7 +63,9 @@ class LoblawsSpider(scrapy.Spider):
     json_response = json.loads(response.text)
     
     totalResults = json_response['pagination']['totalResults']
-    print(f'Found {totalResults} products for category {category}')
+    
+    if page == 0:
+      print(f'Found {totalResults} products for category {category}')
     
     products = [format_loblaws_product(p) for p in list(json_response['results'])]
     products = [p for p in products if p is not None]
