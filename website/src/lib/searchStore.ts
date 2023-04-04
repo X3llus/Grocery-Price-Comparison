@@ -1,12 +1,13 @@
 import { writable, get, type Updater } from "svelte/store";
 import { db, doc, updateDoc, onAuthStateChanged, getAuth } from '$lib/firebase.js';
+import { browser } from "$app/environment";
 
 export const searchStore = writable([]);
 
 const auth = getAuth();
 
 function createSearchListStore() {
-    const { subscribe, set, update } = writable([]);
+    const { subscribe, set, update } = writable(browser && (JSON.parse(localStorage.getItem('searchList')) || []));
     let uid;
 
     onAuthStateChanged(auth, (user) => {
@@ -35,3 +36,4 @@ function createSearchListStore() {
 }
 
 export const searchListStore = createSearchListStore();
+searchListStore.subscribe((value) => browser && localStorage.setItem('searchList', JSON.stringify(value)));

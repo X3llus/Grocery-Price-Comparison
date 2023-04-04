@@ -21,6 +21,8 @@
 	import Google from 'svelte-material-icons/Google.svelte';
 	import { goto } from '$app/navigation';
 	import { searchListStore } from '$lib/searchStore';
+	import { get } from 'svelte/store';
+	import { isEqual } from 'lodash-es';
 
 	// vars
 	let email = '';
@@ -33,13 +35,30 @@
 
 	let state = 0; // 0 = initial, 1 = sign in, 2 = register, 3 = reset password, 4 = already signed in
 
+	function arraysEqual(a, b) {
+		if (a === b) return true;
+		if (a == null || b == null) return false;
+		if (a.length !== b.length) return false;
+
+		// If you don't care about the order of the elements inside
+		// the array, you should sort both arrays here.
+		// Please note that calling sort on an array will modify that array.
+		// you might want to clone your array first.
+
+		for (let i = 0; i < a.length; ++i) {
+			if (a[i] !== b[i]) return false;
+		}
+		return true;
+	}
+
 	onAuthStateChanged(auth, async (user) => {
 		if (!user) {
 			// User is signed out
 			state = 0;
-			searchListStore.set([]);
 			return;
 		}
+
+		console.log('pogging');
 
 		const uid = user.uid;
 		state = 4;
@@ -50,6 +69,11 @@
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
+			if (isEqual(docSnap.data().list, get(searchListStore))) return console.log('data matches');
+			// return searchListStore.update((value) => {
+			// 	console.log([...value, ...docSnap.data().list]);
+			// 	return [...value, ...docSnap.data().list];
+			// });
 			return searchListStore.set(docSnap.data().list);
 		}
 
