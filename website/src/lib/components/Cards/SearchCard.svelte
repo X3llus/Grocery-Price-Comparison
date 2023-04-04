@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+	import { userLocation, searchRadius } from '$lib/stores';
 
     export let hit;
     export let i;
@@ -9,6 +10,24 @@
     function addProduct(i) {
 		dispatch('product', {i});
 	}
+
+    hit.data = hit.data.filter((item) => {
+
+        let distance = 6371 * 2 * Math.atan2(Math.sqrt(Math.pow(Math.sin(($userLocation.latitude - item._geoloc.lat) * Math.PI/180 / 2), 2) + 
+            Math.cos(item._geoloc.lat * Math.PI/180) * Math.cos($userLocation.latitude * Math.PI/180) * Math.pow(Math.sin(($userLocation.longitude - item._geoloc.lng) * 
+            Math.PI/180 / 2), 2)), Math.sqrt(1 - (Math.pow(Math.sin(($userLocation.latitude - item._geoloc.lat) * Math.PI/180 / 2), 2) + 
+            Math.cos(item._geoloc.lat * Math.PI/180) * Math.cos($userLocation.latitude * Math.PI/180) * Math.pow(Math.sin(($userLocation.longitude - item._geoloc.lng) * Math.PI/180 / 2), 2))));
+        return distance <= $searchRadius;
+
+    }).reduce((acc, item) => {
+
+        const index = acc.findIndex((a) => a.storeName === item.storeName);
+            if (index === -1) {
+                acc.push(item);
+            }
+            return acc;
+
+    }, []).sort((a, b) => a.price - b.price);
 
 </script>
 
@@ -48,11 +67,11 @@
         {/if}
         <div class="border m-1" />
         <div class="p-1">
-            {#each hit.data.sort((a, b) => a.price - b.price) as data, i}
-                {#if i < 3}
+            {#each hit.data as data, x}
+                {#if x < 3}
                     <div class="flex justify-between">
-                        <h3 class="{ i === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium' } text-md capitalize truncate" title="{hit.data[i].storeName}">{hit.data[i].storeName}</h3>
-                        <h3 class="{ i === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium' } text-md">${hit.data[i].price}</h3>
+                        <h3 class="{ x === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium' } text-md capitalize truncate" title="{data.storeName}">{data.storeName}</h3>
+                        <h3 class="{ x === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium' } text-md">${data.price}</h3>
                     </div>
                 {/if}
             {/each}
