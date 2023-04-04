@@ -133,11 +133,12 @@
 </script>
 
 <!-- give options to either sign in or register -->
-<div class="h-screen w-screen align-middle flex content-center justify-around">
-	<div class="flex flex-col w-min h-min p-32 border-2 rounded-3xl shadow-xl m-auto bg-background">
+<div class="h-screen w-screen align-middle flex content-center justify-around" style="background-image: url(../../background.svg);">
+	<div class="flex flex-col w-min h-min pb-32 px-24 pt-16 border-2 rounded-3xl shadow-xl m-auto bg-white">
 		{#if state === 0}
 			<div class="space-y-4">
-				<h1 class="text-4xl font-semibold text-black py-4 w-full text-center">Sign In</h1>
+				<img src="GroceriezLogo.svg" alt="" class="mx-auto">
+				<h1 class="text-5xl font-semibold text-black py-4 w-full text-center">Sign In</h1>
 				<button
 					on:click={() => (state = 1)}
 					class="btn btn-primary w-56 mx-10 bg-primary text-white p-4 text-center rounded-full  flex justify-around"
@@ -155,25 +156,25 @@
 				>
 				<button
 					on:click={() => goto('/search')}
-					class="btn btn-primary w-56 mx-10 bg-primary text-white p-4 text-center rounded-full  flex justify-around"
+					class="btn btn-primary w-56 mx-10 bg-secondary text-white p-4 text-center rounded-full font-semibold flex justify-around"
 					>Search</button
 				>
 			</div>
 		{:else if state === 1}
 			<!-- Email Sign In -->
-			<div class="space-y-4">
-				<h2 class="text-xl">Sign In with Email</h2>
+			<div class="space-y-4 flex flex-col">
+				<h2 class="text-xl font-semibold text-black w-full text-center">Sign In with Email</h2>
 				<input
 					type="email"
 					bind:value={email}
 					placeholder="Email"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<input
 					type="password"
 					bind:value={password}
 					placeholder="Password"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<button
 					on:click={signinEmail}
@@ -191,30 +192,30 @@
 					>Back</button
 				>
 				{#if error}
-					<div class="text-red-500">{error}</div>
+					<div class="text-red-500 text-center">{error}</div>
 				{/if}
 			</div>
 		{:else if state === 2}
 			<!-- Email Register -->
-			<div class="space-y-4">
-				<h2 class="text-xl">Register with Email</h2>
+			<div class="space-y-4 flex flex-col">
+				<h2 class="text-xl font-semibold text-black w-full text-center">Register with Email</h2>
 				<input
 					type="email"
 					bind:value={email}
 					placeholder="Email"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<input
 					type="password"
 					bind:value={password}
 					placeholder="Password"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<input
 					type="password"
 					bind:value={confirmPassword}
 					placeholder="Confirm Password"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<button
 					on:click={register}
@@ -227,18 +228,18 @@
 					>Back</button
 				>
 				{#if error}
-					<div class="text-red-500">{error}</div>
+					<div class="text-red-500 text-center">{error}</div>
 				{/if}
 			</div>
 		{:else if state === 3}
 			<!-- Reset Password -->
-			<div class="space-y-4">
-				<h2 class="text-xl">Reset Password</h2>
+			<div class="space-y-4 flex flex-col">
+				<h2 class="text-xl font-semibold text-black w-full text-center">Reset Password</h2>
 				<input
 					type="email"
 					bind:value={email}
 					placeholder="Email"
-					class="w-56 h-10 text-lg border-2 rounded-md"
+					class="w-56 h-10 text-lg border-2 rounded-md mx-auto"
 				/>
 				<button
 					on:click={resetPassword}
@@ -251,18 +252,18 @@
 					>Back</button
 				>
 				{#if error}
-					<div class="text-red-500">{error}</div>
+					<div class="text-red-500 text-center">{error}</div>
 				{/if}
 				{#if success}
-					<div class="text-green-500">{success}</div>
+					<div class="text-primary text-center">{success}</div>
 				{/if}
 			</div>
 		{:else if state === 4}
 			<!-- Already Signed In -->
-			<div class="space-y-4">
-				<h2 class="text-xl">You are already signed in,</h2>
-				<div class="text-lg">{email}</div>
-				<div class="text-md">
+			<div class="space-y-4 flex flex-col">
+				<h2 class="text-2xl font-semibold text-black w-full text-center">You are already signed in,</h2>
+				<div class="text-lg text-primary font-bold text-center">{email}</div>
+				<div class="text-md text-center">
 					Your shopping list will be synced automatically across all signed in devices :)
 				</div>
 				<button
@@ -272,7 +273,7 @@
 				>
 				<button
 					on:click={() => signOut(auth)}
-					class="btn btn-primary w-56 mx-10 bg-primary text-white p-1 text-center rounded-full"
+					class="btn btn-primary w-56 mx-10 bg-secondary text-white p-1 text-center rounded-full"
 					>Sign Out</button
 				>
 			</div>
