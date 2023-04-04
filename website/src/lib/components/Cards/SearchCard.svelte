@@ -13,7 +13,7 @@
 </script>
 
 <div class="w-full border rounded-md shadow-lg overflow-hidden group bg-white flex flex-col justify-between">
-    <img src={hit.imageUrl} alt={hit.name} class="w-full" />
+    <img src={hit.imageUrl ? hit.imageUrl : "/productHolder.png"} alt={hit.name} class="w-full" />
     <div class="px-5 pt-5">
         <h2
             class="truncate text-primary text-xl font-sans font-medium hover:text-black"
