@@ -160,9 +160,9 @@
 				</div>
 			</button>
 		</div>
-		<button class="" on:click={() => (sideOpen = !sideOpen)} aria-label="Cart">
-			<ListBox color={'white'} width={24} height={24} />
-		</button>
+		<a href="/signin" aria-label="Cart">
+			<Account color={'white'} width={24} height={24} />
+		</a>
 	{/if}
 </div>
 
