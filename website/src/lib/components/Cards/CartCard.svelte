@@ -1,12 +1,10 @@
 <script lang="ts">
-    
 	import Delete from 'svelte-material-icons/Delete.svelte';
-    import { createEventDispatcher } from "svelte";
-	import { searchListStore} from '$lib/searchStore';
+	import { createEventDispatcher } from 'svelte';
+	import { searchListStore } from '$lib/searchStore';
 
-    export let item;
-    export let i;
-
+	export let item;
+	export let i;
 </script>
 
 <li class="pt-3 bg-white rounded-md shadow-md overflow-hidden">
@@ -37,7 +35,17 @@
             class="bg-gradient-to-b from-green-700 to-primary text-white w-1/4 font-bold rounded-tr-md"
             on:click={() => {
                 // Add logic for subtracting from product quantity
-                
+                if (item.quanity <= 1) {
+                  return searchListStore.add((value) => {
+                    value.splice(i, 1);
+                    return value;
+                  });
+                }
+
+                searchListStore.add((value) => {
+                  value[i].quanity -= 1;
+                  return value;
+                });
             }}
         >
             -
@@ -50,7 +58,10 @@
             class="bg-gradient-to-b from-green-700 to-primary text-white w-1/4 font-bold rounded-tl-md"
             on:click={() => {
                 // Add logic for adding to product quantity
-                
+                searchListStore.add((value) => {
+                  value[i].quanity += 1;
+                  return value;
+                });
             }}
         >
             +
