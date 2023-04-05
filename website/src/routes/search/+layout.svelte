@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { CartCard } from '$lib/components';
+	import { correctInvalidUnits } from '$lib/utils';
 	import { get } from 'svelte/store';
 	import { browser } from '$app/environment';
 
@@ -51,8 +52,12 @@
 
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
+			const correctedHits = correctInvalidUnits(hits.hits[0]);
+			searchStore.set(correctedHits);
+		} else {
+			const correctedHits = correctInvalidUnits(hits.hits);
+			searchStore.set(correctedHits);
 		}
-		searchStore.set(hits.hits);
 
 		$page.url.searchParams.set('q', search);
 		goto(`?${$page.url.searchParams.toString()}`);
@@ -66,39 +71,43 @@
 
 <!-- Slide Menu -->
 {#if browser}
-<div
-	class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
-	style="transform: translateX({sideOpen ? '0%' : '100%'});"
->
-	<div class="h-full bg-background flex flex-col">
-		<div class="flex">
-			<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
-				<Arrow color={'black'} width={32} height={32} />
-			</button>
-			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
-			<button class="mr-2" on:click={() => {
-				if (confirm('Are you sure you want to clear your search list?')) {
-					$searchListStore = []
-				}}}>
-				<Delete color={'black'} width={32} height={32} />
-			</button>
-		</div>
-		<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
-			{#each $searchListStore as item, i}
-				<CartCard item={item} i={i} />
-			{/each}
-		</ul>
-		<div class="text-3xl p-8 flex justify-between">
-			<span>Total Price:</span>
-			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
-			<span
-				>${((list) => {
-					return list.reduce((m, v) => m + +v.data[0].price*v.quanity, 0);
-				})($searchListStore).toFixed(2)}</span
-			>
+	<div
+		class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
+		style="transform: translateX({sideOpen ? '0%' : '100%'});"
+	>
+		<div class="h-full bg-background flex flex-col">
+			<div class="flex">
+				<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
+					<Arrow color={'black'} width={32} height={32} />
+				</button>
+				<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
+				<button
+					class="mr-2"
+					on:click={() => {
+						if (confirm('Are you sure you want to clear your search list?')) {
+							$searchListStore = [];
+						}
+					}}
+				>
+					<Delete color={'black'} width={32} height={32} />
+				</button>
+			</div>
+			<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
+				{#each $searchListStore as item, i}
+					<CartCard {item} {i} />
+				{/each}
+			</ul>
+			<div class="text-3xl p-8 flex justify-between">
+				<span>Total Price:</span>
+				<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
+				<span
+					>${((list) => {
+						return list.reduce((m, v) => m + +v.data[0].price * v.quanity, 0);
+					})($searchListStore).toFixed(2)}</span
+				>
+			</div>
 		</div>
 	</div>
-</div>
 {/if}
 
 {#if sideOpen}
@@ -155,7 +164,7 @@
 			aria-label="Account"
 		>
 			<Account color={'black'} width={24} height={24} />
-	</a>
+		</a>
 	{:else}
 		<div class="flex flex-col justify-center">
 			<button
