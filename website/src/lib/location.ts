@@ -1,16 +1,6 @@
 import { PUBLIC_MAPBOX_ACCESS_TOKEN } from "$env/static/public";
+import type { Location, ReverseGeocodeResponse } from "$lib/types";
 
-interface Location {
-  latitude: number;
-  longitude: number;
-  city?: string;
-  province?: string;
-}
-
-interface ReverseGeocodeResponse {
-  city: string;
-  province: string;
-}
 
 export const defaultLocation: Location = { 
   latitude: 44.58857,

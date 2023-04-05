@@ -1,6 +1,6 @@
 <script>
-	import { fly, fade } from 'svelte/transition';
 	import Close from 'svelte-material-icons/Close.svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	export let visible = false;
 	export let onClose;

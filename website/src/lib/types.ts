@@ -73,4 +73,17 @@ export interface Hit extends Record<string, any> {
   unit: string
 }
 
+export interface Location {
+  latitude: number;
+  longitude: number;
+  city?: string;
+  province?: string;
+}
+
+export interface ReverseGeocodeResponse {
+  city: string;
+  province: string;
+}
+
 export { }
+
