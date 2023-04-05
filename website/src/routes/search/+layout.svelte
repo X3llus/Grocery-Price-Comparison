@@ -72,7 +72,7 @@
 			</button>
 			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
 		</div>
-		<ul class="flex-1 space-y-2 p-2">
+		<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
 			{#each $searchListStore as item, i}
 				<CartCard item={item} i={i} />
 			{/each}

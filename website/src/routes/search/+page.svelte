@@ -13,7 +13,7 @@
     function addToList(event) {
 		let foundMatch = false;
 		if ($searchListStore.length === 0) {
-			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 ,best: [event.detail.best]}]);
 		}
 		$searchListStore.forEach((element) => {
 			if (element.objectID === hits[event.detail.i].objectID) {
@@ -25,7 +25,7 @@
 		});
 
 		if(!foundMatch) {
-			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 }]);
+			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 ,best: [event.detail.best]}]);
 		}
 	}
 
