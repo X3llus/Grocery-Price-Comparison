@@ -39,7 +39,7 @@
 	<title>Groceriez | Search</title>
 </svelte:head>
 
-<div class="mx-auto w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 pt-20 place-content-center">
+<div class="mx-auto pb-10 w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 pt-20 place-content-center">
 	{#each hits as hit, i}
 		<SearchCard hit={hit} i={i} on:product={addToList}/>
 	{/each}
