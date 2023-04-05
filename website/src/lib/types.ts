@@ -32,7 +32,7 @@ export type GeoPoint = {
 
 export type ShortGeoPoint = {
   lat: number
-  lon: number
+  lng: number
 }
 
 export type StoreAddress = {
