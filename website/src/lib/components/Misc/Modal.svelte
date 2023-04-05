@@ -1,6 +1,6 @@
 <script>
-	import { fly, fade } from 'svelte/transition';
 	import Close from 'svelte-material-icons/Close.svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	export let visible = false;
 	export let onClose;
@@ -50,7 +50,7 @@
 		padding: 10px;
 		background: #fff;
 		z-index: 3;
-		position: absolute;
+		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -47.5%);

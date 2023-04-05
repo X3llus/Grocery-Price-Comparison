@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { SearchCard } from '$lib/components';
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { onDestroy } from 'svelte';
-	import { SearchCard } from '$lib/components';
 
 	let hits = [];
 
@@ -11,26 +11,26 @@
 	});
 
 	function addToList(event) {
-        const updateList = (value) => [
-            ...value,
-            { ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
-        ];
+		const updateList = (value) => [
+			...value,
+			{ ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
+		];
 
-        if ($searchListStore.length === 0) {
-            return searchListStore.add(updateList);
-        }
+		if ($searchListStore.length === 0) {
+			return searchListStore.add(updateList);
+		}
 
-        const foundIndex = $searchListStore.findIndex(
-            (element) => element.objectID === hits[event.detail.i].objectID
-        );
+		const foundIndex = $searchListStore.findIndex(
+			(element) => element.objectID === event.detail.hit.objectID
+		);
 
-        if (foundIndex >= 0) {
-            $searchListStore[foundIndex].quanity++;
-            searchListStore.add((value) => value);
-        } else {
-            searchListStore.add(updateList);
-        }
-    }
+		if (foundIndex >= 0) {
+			$searchListStore[foundIndex].quanity++;
+			searchListStore.add((value) => value);
+		} else {
+			searchListStore.add(updateList);
+		}
+	}
 
 	onDestroy(() => {
 		hits = [];
