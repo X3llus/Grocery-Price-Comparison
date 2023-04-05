@@ -5,6 +5,7 @@ This project will be used to search prices of local grocery stores and compare w
 ## Website
 
 The website is made using Sveltekit, Tailwindcss, and Firebase.
+https://groceriez.bradencoates.ca/
 
 ## Server
 
