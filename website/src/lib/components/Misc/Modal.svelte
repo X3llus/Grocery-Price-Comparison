@@ -50,7 +50,7 @@
 		padding: 10px;
 		background: #fff;
 		z-index: 3;
-		position: absolute;
+		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -47.5%);
