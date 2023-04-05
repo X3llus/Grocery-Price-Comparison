@@ -90,7 +90,6 @@ export const correctInvalidUnits = (hits: Hit[]): Hit[] => {
       // This was likely intended to be L or Kg
       if (hit.size < 5) {
         hit.unit = isMl ? 'l' : 'kg';
-        console.log(`Corrected unit for ${hit.name} to ${hit.unit}`)
       }
       
       // If size for example is 10200ml
@@ -100,7 +99,6 @@ export const correctInvalidUnits = (hits: Hit[]): Hit[] => {
         const sizeOfIndividualUnit = asString.substring(asString.length - 3);
         const numUnits = asString.substring(0, asString.length - 3);
         hit.size = `${numUnits} x ${sizeOfIndividualUnit}`
-        console.log(`Corrected size for ${hit.name} to ${hit.size}`);
       }
     }
     correctedHits.push(hit);
