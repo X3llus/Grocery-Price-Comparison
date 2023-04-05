@@ -5,6 +5,7 @@
 
 	export let item;
 	export let i;
+
 </script>
 
 <li class="pt-3 bg-white rounded-md shadow-md overflow-hidden">
@@ -13,8 +14,8 @@
         <div class="flex flex-col flex-1 pl-3 w-0">
             <span class="text-sm font-medium truncate text-primary hover:text-black" title="{item.name}">{item.name}</span>
             <div class="flex justify-between">
-                <span class="text-sm font-medium capitalize">{item.data[0].storeName}</span>
-                <span class="text-sm font-medium">${item.data[0].price}</span>
+                <span class="text-sm font-medium capitalize">{item.best[0].storeName}</span>
+                <span class="text-sm font-medium">${item.best[0].price}</span>
             </div>
         </div>
         <button
