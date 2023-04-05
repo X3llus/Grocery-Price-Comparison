@@ -22,7 +22,7 @@
             class="rounded-full w-10 h-10 flex justify-center"
             aria-label="Remove from cart"
             on:click={() => {
-                searchListStore.update((value) => {
+                searchListStore.add((value) => {
                     value.splice(i, 1);
                     return value;
                 });

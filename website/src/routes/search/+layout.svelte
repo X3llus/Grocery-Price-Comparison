@@ -13,6 +13,8 @@
 	import { goto } from '$app/navigation';
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { CartCard } from '$lib/components';
+	import { get } from 'svelte/store';
+	import { browser } from '$app/environment';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
@@ -33,6 +35,7 @@
 			search = q;
 			searchItems();
 		}
+		console.log(get(searchListStore));
 	});
 
 	const toggleLocationModal = () => {
@@ -62,6 +65,7 @@
 <svelte:window bind:innerWidth={screenSize} />
 
 <!-- Slide Menu -->
+{#if browser}
 <div
 	class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
 	style="transform: translateX({sideOpen ? '0%' : '100%'});"
@@ -95,6 +99,7 @@
 		</div>
 	</div>
 </div>
+{/if}
 
 {#if sideOpen}
 	<div

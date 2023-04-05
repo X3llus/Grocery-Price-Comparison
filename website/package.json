@@ -39,6 +39,7 @@
 		"@mapbox/mapbox-gl-geocoder": "^5.0.1",
 		"aos": "^2.3.4",
 		"firebase": "^9.15.0",
+		"lodash-es": "^4.17.21",
 		"mapbox-gl": "^2.13.0",
 		"svelte-algolia": "^0.3.2",
 		"svelte-material-icons": "^2.1.0"
