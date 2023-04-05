@@ -6,6 +6,7 @@
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
 	import Account from 'svelte-material-icons/Account.svelte';
+	import Delete from 'svelte-material-icons/Delete.svelte';
 	import { Modal, StoreMap } from '$lib/components';
 	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
@@ -13,6 +14,8 @@
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { CartCard } from '$lib/components';
 	import { correctInvalidUnits } from '$lib/utils';
+	import { get } from 'svelte/store';
+	import { browser } from '$app/environment';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
@@ -33,6 +36,7 @@
 			search = q;
 			searchItems();
 		}
+		console.log(get(searchListStore));
 	});
 
 	const toggleLocationModal = () => {
@@ -66,33 +70,45 @@
 <svelte:window bind:innerWidth={screenSize} />
 
 <!-- Slide Menu -->
-<div
-	class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
-	style="transform: translateX({sideOpen ? '0%' : '100%'});"
->
-	<div class="h-full bg-background flex flex-col">
-		<div class="grid grid-cols-3">
-			<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
-				<Arrow color={'black'} width={32} height={32} />
-			</button>
-			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
-		</div>
-		<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
-			{#each $searchListStore as item, i}
-				<CartCard {item} {i} />
-			{/each}
-		</ul>
-		<div class="text-3xl p-8 flex justify-between">
-			<span>Total Price:</span>
-			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
-			<span
-				>${((list) => {
-					return list.reduce((m, v) => m + +v.data[0].price * v.quanity, 0);
-				})($searchListStore).toFixed(2)}</span
-			>
+{#if browser}
+	<div
+		class="fixed right-0 top-0 h-screen transition-transform z-30 sm:w-96 w-screen"
+		style="transform: translateX({sideOpen ? '0%' : '100%'});"
+	>
+		<div class="h-full bg-background flex flex-col">
+			<div class="flex">
+				<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
+					<Arrow color={'black'} width={32} height={32} />
+				</button>
+				<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
+				<button
+					class="mr-2"
+					on:click={() => {
+						if (confirm('Are you sure you want to clear your search list?')) {
+							$searchListStore = [];
+						}
+					}}
+				>
+					<Delete color={'black'} width={32} height={32} />
+				</button>
+			</div>
+			<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
+				{#each $searchListStore as item, i}
+					<CartCard {item} {i} />
+				{/each}
+			</ul>
+			<div class="text-3xl p-8 flex justify-between">
+				<span>Total Price:</span>
+				<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
+				<span
+					>${((list) => {
+						return list.reduce((m, v) => m + +v.data[0].price * v.quanity, 0);
+					})($searchListStore).toFixed(2)}</span
+				>
+			</div>
 		</div>
 	</div>
-</div>
+{/if}
 
 {#if sideOpen}
 	<div
