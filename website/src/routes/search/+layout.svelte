@@ -196,10 +196,17 @@
 	<slot />
 </div>
 
-<button
-	class="fixed bottom-4 right-4 rounded-full bg-primary w-12 h-12 flex justify-center items-center"
-	on:click={() => (sideOpen = !sideOpen)}
-	aria-label="Cart"
->
-	<ListBox color={'white'} width={24} height={24} />
-</button>
+<div class="fixed bottom-4 right-4">
+	<button
+		class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-full bg-primary w-12 h-12 flex justify-center items-center hover:bg-primary-hover"
+		on:click={() => (sideOpen = !sideOpen)}
+		aria-label="Cart"
+	>
+		<ListBox color={'white'} width={24} height={24} />
+		<div
+			class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"
+		>
+			{$searchListStore.reduce((acc, curr) => acc + curr.quanity, 0)}
+		</div>
+	</button>
+</div>

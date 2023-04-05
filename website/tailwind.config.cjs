@@ -9,6 +9,7 @@ module.exports = {
         'secondary': '#575A6C',
         'background': '#F0FFF0',
         'rich-black': '#0A1D29',
+        'primary-hover': '#008B00',
       },
       keyframes: {
         wiggle: {

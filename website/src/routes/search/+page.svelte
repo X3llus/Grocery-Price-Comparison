@@ -21,7 +21,7 @@
 		}
 
 		const foundIndex = $searchListStore.findIndex(
-			(element) => element.objectID === event.detail.hit.objectID
+			(element) => element.objectID === hits[event.detail.i].objectID
 		);
 
 		if (foundIndex >= 0) {
