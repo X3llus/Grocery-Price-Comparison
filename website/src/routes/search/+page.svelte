@@ -11,29 +11,26 @@
 	});
 
 	function addToList(event) {
-		let foundMatch = false;
-		if ($searchListStore.length === 0) {
-			return searchListStore.add((value) => [
-				...value,
-				{ ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
-			]);
-		}
-		$searchListStore.forEach((element) => {
-			if (element.objectID === hits[event.detail.i].objectID) {
-				element.quanity++;
-				foundMatch = true;
-				searchListStore.add((value) => value);
-				return;
-			}
-		});
+        const updateList = (value) => [
+            ...value,
+            { ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
+        ];
 
-		if (!foundMatch) {
-			return searchListStore.add((value) => [
-				...value,
-				{ ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
-			]);
-		}
-	}
+        if ($searchListStore.length === 0) {
+            return searchListStore.add(updateList);
+        }
+
+        const foundIndex = $searchListStore.findIndex(
+            (element) => element.objectID === hits[event.detail.i].objectID
+        );
+
+        if (foundIndex >= 0) {
+            $searchListStore[foundIndex].quanity++;
+            searchListStore.add((value) => value);
+        } else {
+            searchListStore.add(updateList);
+        }
+    }
 
 	onDestroy(() => {
 		hits = [];
