@@ -6,6 +6,7 @@
 	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
 	import Account from 'svelte-material-icons/Account.svelte';
+	import Delete from 'svelte-material-icons/Delete.svelte';
 	import { Modal, StoreMap } from '$lib/components';
 	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
 	import algoliasearch from 'algoliasearch/lite';
@@ -66,11 +67,17 @@
 	style="transform: translateX({sideOpen ? '0%' : '100%'});"
 >
 	<div class="h-full bg-background flex flex-col">
-		<div class="grid grid-cols-3">
+		<div class="flex">
 			<button class="ml-2" on:click={() => (sideOpen = !sideOpen)}>
 				<Arrow color={'black'} width={32} height={32} />
 			</button>
 			<h2 class="text-4xl font-semibold text-black py-4 w-full text-center">List</h2>
+			<button class="mr-2" on:click={() => {
+				if (confirm('Are you sure you want to clear your search list?')) {
+					$searchListStore = []
+				}}}>
+				<Delete color={'black'} width={32} height={32} />
+			</button>
 		</div>
 		<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
 			{#each $searchListStore as item, i}
