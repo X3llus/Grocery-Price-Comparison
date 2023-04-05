@@ -73,7 +73,7 @@
 
 <div class="mx-auto text-center">
 	<div style="background-image: url(../../background.svg);" class="bg-center bg-cover">
-		<img src="GroceriezLogo.svg" alt="" class="mx-auto py-32 w-2/3 lg:w-1/3 " />
+		<a href="/"><img src="GroceriezLogo.svg" alt="" class="mx-auto py-32 w-2/3 lg:w-1/3 " /></a>
 	</div>
 	<!-- Welcome -->
 	<!-- To add Search Page, Login buttons -->
@@ -84,7 +84,7 @@
 			</h2>
 			<form
 				on:submit|preventDefault={() => goto(`/search?q=${search}`)}
-				class="flex justify-center py-10"
+				class="flex justify-center py-5"
 			>
 				<input
 					bind:value={search}
@@ -98,6 +98,14 @@
 					<Magnify color={'white'} width={24} height={24} />
 				</button>
 			</form>
+			<h2 class="text-xl text-white font-sans font-medium">Or</h2>
+			<a
+				class="btn btn-primary w-56 mx-auto bg-accent text-white p-4 m-5 text-center rounded-full flex justify-center"
+				href="/signin"
+				aria-label="Account"
+			>
+				Sign-In <Account color={'white'} width={24} height={24} />
+			</a>
 			<p class="text-2xl font-sans font-medium text-background">
 				Tired of taking time and always looking for the best price when grocery shopping? Look no
 				further. Groceriez is your go-to App for price comparison at your local chain, Ontarian

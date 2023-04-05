@@ -171,16 +171,16 @@
 			}
 		}
 	}
+	let screenSize;
+	let screenSmall = 640;
 </script>
 
+<svelte:window bind:innerWidth={screenSize} />
+
 <!-- give options to either sign in or register -->
-<div
-	class="h-screen w-screen align-middle flex content-center justify-around"
-	style="background-image: url(../../background.svg);"
->
-	<div
-		class="flex flex-col w-min h-min pb-32 px-24 pt-16 border-2 rounded-3xl shadow-xl m-auto bg-white"
-	>
+
+<div class="h-screen w-screen align-middle flex content-center justify-around" style={ screenSize > screenSmall ? "background-image: url(../../background.svg);" : "" }>
+	<div class="flex flex-col w-min h-min p-1 sm:pb-32 sm:px-24 sm:pt-16 sm:border-2 mx-2 my-auto sm:rounded-3xl sm:shadow-xl sm:m-auto sm:bg-white">
 		{#if state === 0}
 			<div class="space-y-4">
 				<img src="GroceriezLogo.svg" alt="" class="mx-auto" />
