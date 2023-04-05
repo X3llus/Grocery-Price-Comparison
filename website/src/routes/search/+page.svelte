@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { SearchCard } from '$lib/components';
 	import { searchListStore, searchStore } from '$lib/searchStore';
-	import { onDestroy } from 'svelte';
 
 	let hits = [];
 
@@ -31,11 +30,6 @@
 			searchListStore.add(updateList);
 		}
 	}
-
-	onDestroy(() => {
-		hits = [];
-		searchStore.set([]);
-	});
 </script>
 
 <svelte:head>

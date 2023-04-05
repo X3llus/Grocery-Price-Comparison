@@ -51,7 +51,6 @@
 		if (typeof hits.hits == 'object') {
 			const hitsArr = [hits.hits];
 			const correctedHits = correctInvalidUnits(hitsArr[0]);
-			console.log(correctedHits);
 			searchStore.set(correctedHits);
 		} else {
 			const correctedHits = correctInvalidUnits(hits.hits);
