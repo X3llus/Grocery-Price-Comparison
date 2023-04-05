@@ -7,13 +7,16 @@
 
 	searchStore.subscribe((value) => {
 		if (value.length === 0) return;
-		hits = value[0];
+		hits = value;
 	});
 
-    function addToList(event) {
+	function addToList(event) {
 		let foundMatch = false;
 		if ($searchListStore.length === 0) {
-			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 ,best: [event.detail.best]}]);
+			return searchListStore.add((value) => [
+				...value,
+				{ ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
+			]);
 		}
 		$searchListStore.forEach((element) => {
 			if (element.objectID === hits[event.detail.i].objectID) {
@@ -24,8 +27,11 @@
 			}
 		});
 
-		if(!foundMatch) {
-			return searchListStore.add((value) => [...value, { ...hits[event.detail.i], quanity: 1 ,best: [event.detail.best]}]);
+		if (!foundMatch) {
+			return searchListStore.add((value) => [
+				...value,
+				{ ...hits[event.detail.i], quanity: 1, best: [event.detail.best] },
+			]);
 		}
 	}
 
@@ -39,8 +45,10 @@
 	<title>Groceriez | Search</title>
 </svelte:head>
 
-<div class="mx-auto pb-10 w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 pt-20 place-content-center">
+<div
+	class="mx-auto pb-10 w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 pt-20 place-content-center"
+>
 	{#each hits as hit, i}
-		<SearchCard hit={hit} i={i} on:product={addToList}/>
+		<SearchCard {hit} {i} on:product={addToList} />
 	{/each}
 </div>

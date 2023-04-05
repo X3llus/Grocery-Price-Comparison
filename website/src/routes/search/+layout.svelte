@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import { searchListStore, searchStore } from '$lib/searchStore';
 	import { CartCard } from '$lib/components';
+	import { correctInvalidUnits } from '$lib/utils';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
@@ -47,8 +48,12 @@
 
 		if (typeof hits.hits == 'object') {
 			hits.hits = [hits.hits];
+			const correctedHits = correctInvalidUnits(hits.hits[0]);
+			searchStore.set(correctedHits);
+		} else {
+			const correctedHits = correctInvalidUnits(hits.hits);
+			searchStore.set(correctedHits);
 		}
-		searchStore.set(hits.hits);
 
 		$page.url.searchParams.set('q', search);
 		goto(`?${$page.url.searchParams.toString()}`);
@@ -74,7 +79,7 @@
 		</div>
 		<ul class="flex-1 space-y-2 p-2 overflow-auto overscroll-contain">
 			{#each $searchListStore as item, i}
-				<CartCard item={item} i={i} />
+				<CartCard {item} {i} />
 			{/each}
 		</ul>
 		<div class="text-3xl p-8 flex justify-between">
@@ -82,7 +87,7 @@
 			<!-- Gets the sum of prices for all items *needs to multiply price by the quantity before it is added-->
 			<span
 				>${((list) => {
-					return list.reduce((m, v) => m + +v.data[0].price*v.quanity, 0);
+					return list.reduce((m, v) => m + +v.data[0].price * v.quanity, 0);
 				})($searchListStore).toFixed(2)}</span
 			>
 		</div>
@@ -143,7 +148,7 @@
 			aria-label="Account"
 		>
 			<Account color={'black'} width={24} height={24} />
-	</a>
+		</a>
 	{:else}
 		<div class="flex flex-col justify-center">
 			<button

@@ -1,3 +1,5 @@
+import type { Hit } from '$lib/types';
+
 export const findLatLonRange = (centerLat: number, centerLon: number, radiusKm: number) => {
   const d_lat = radiusKm / 111.045
   const latitude_min = centerLat - d_lat
@@ -76,4 +78,32 @@ export const getCardIcon = (storeType: string): string => {
     default:
       return 'LoblawsCardIcon.png';
   }
+}
+
+export const correctInvalidUnits = (hits: Hit[]): Hit[] => {
+  const correctedHits = [];
+
+  for (const hit of hits) {
+    const isMl = hit.unit === 'ml';
+    const isG = hit.unit === 'g';
+    if (isMl || isG) {
+      // This was likely intended to be L or Kg
+      if (hit.size < 5) {
+        hit.unit = isMl ? 'l' : 'kg';
+        console.log(`Corrected unit for ${hit.name} to ${hit.unit}`)
+      }
+      
+      // If size for example is 10200ml
+      // This was likely intended to be X amount of mL or g
+      else if (hit.size > 1000) {
+        const asString = hit.size.toString();
+        const sizeOfIndividualUnit = asString.substring(asString.length - 3);
+        const numUnits = asString.substring(0, asString.length - 3);
+        hit.size = `${numUnits} x ${sizeOfIndividualUnit}`
+        console.log(`Corrected size for ${hit.name} to ${hit.size}`);
+      }
+    }
+    correctedHits.push(hit);
+  }
+  return correctedHits;
 }
