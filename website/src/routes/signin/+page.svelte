@@ -21,7 +21,6 @@
 	import Google from 'svelte-material-icons/Google.svelte';
 	import { goto } from '$app/navigation';
 	import { searchListStore } from '$lib/searchStore';
-	import { get } from 'svelte/store';
 	import { isEqual } from 'lodash-es';
 
 	// vars
@@ -35,22 +34,6 @@
 
 	let state = 0; // 0 = initial, 1 = sign in, 2 = register, 3 = reset password, 4 = already signed in
 
-	function arraysEqual(a, b) {
-		if (a === b) return true;
-		if (a == null || b == null) return false;
-		if (a.length !== b.length) return false;
-
-		// If you don't care about the order of the elements inside
-		// the array, you should sort both arrays here.
-		// Please note that calling sort on an array will modify that array.
-		// you might want to clone your array first.
-
-		for (let i = 0; i < a.length; ++i) {
-			if (a[i] !== b[i]) return false;
-		}
-		return true;
-	}
-
 	onAuthStateChanged(auth, async (user) => {
 		if (!user) {
 			// User is signed out
@@ -58,7 +41,14 @@
 			return;
 		}
 
-		console.log('pogging');
+		state = 4;
+		email = user.email;
+	});
+
+	async function onSignIn(user) {
+		if (!user) {
+			return;
+		}
 
 		const uid = user.uid;
 		state = 4;
@@ -69,12 +59,7 @@
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
-			if (isEqual(docSnap.data().list, get(searchListStore))) return console.log('data matches');
-			// return searchListStore.update((value) => {
-			// 	console.log([...value, ...docSnap.data().list]);
-			// 	return [...value, ...docSnap.data().list];
-			// });
-			return searchListStore.set(docSnap.data().list);
+			return mergeLists(docSnap.data().list);
 		}
 
 		// setup base document
@@ -82,11 +67,43 @@
 			owner: uid,
 			list: [],
 		});
-	});
+	}
+
+	function mergeLists(firestoreList) {
+		if (isEqual(firestoreList, $searchListStore)) {
+			return;
+		}
+
+		firestoreList.forEach((firestoreItem) => {
+			if (firestoreItem.quanity === 0) {
+				return searchListStore.add((value) => value);
+			}
+
+			const foundIndex = $searchListStore.findIndex(
+				(element) => element.objectID === firestoreItem.objectID
+			);
+
+			if (foundIndex >= 0) {
+				$searchListStore[foundIndex].quanity += firestoreItem.quanity;
+				searchListStore.add((value) => value);
+			} else {
+				searchListStore.add((value) => [
+					...value,
+					{
+						...firestoreItem,
+						quanity: firestoreItem.quanity,
+						best: [...firestoreItem.best],
+					},
+				]);
+			}
+		});
+	}
 
 	// Sign in with email and password
 	async function signinEmail() {
-		signInWithEmailAndPassword(auth, email, password);
+		const creds = await signInWithEmailAndPassword(auth, email, password);
+		const user = creds.user;
+		onSignIn(user);
 	}
 
 	// Sign in with Google
@@ -94,8 +111,8 @@
 		try {
 			let result = await signInWithPopup(auth, provider);
 			const credential = GoogleAuthProvider.credentialFromResult(result);
-			const token = credential.accessToken;
 			const user = result.user;
+			onSignIn(user);
 		} catch (e) {
 			if (e.code === 'auth/account-exists-with-different-credential') {
 				error = 'Account already exists with different credentials';
@@ -124,7 +141,7 @@
 		try {
 			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 			const user = userCredential.user;
-			// await updateProfile(user, { displayName: name });
+			onSignIn(user);
 		} catch (e) {
 			if (e.code === 'auth/email-already-in-use') {
 				error = 'Email already in use';
@@ -157,11 +174,16 @@
 </script>
 
 <!-- give options to either sign in or register -->
-<div class="h-screen w-screen align-middle flex content-center justify-around" style="background-image: url(../../background.svg);">
-	<div class="flex flex-col w-min h-min pb-32 px-24 pt-16 border-2 rounded-3xl shadow-xl m-auto bg-white">
+<div
+	class="h-screen w-screen align-middle flex content-center justify-around"
+	style="background-image: url(../../background.svg);"
+>
+	<div
+		class="flex flex-col w-min h-min pb-32 px-24 pt-16 border-2 rounded-3xl shadow-xl m-auto bg-white"
+	>
 		{#if state === 0}
 			<div class="space-y-4">
-				<img src="GroceriezLogo.svg" alt="" class="mx-auto">
+				<img src="GroceriezLogo.svg" alt="" class="mx-auto" />
 				<h1 class="text-5xl font-semibold text-black py-4 w-full text-center">Sign In</h1>
 				<button
 					on:click={() => (state = 1)}
@@ -285,7 +307,9 @@
 		{:else if state === 4}
 			<!-- Already Signed In -->
 			<div class="space-y-4 flex flex-col">
-				<h2 class="text-2xl font-semibold text-black w-full text-center">You are already signed in,</h2>
+				<h2 class="text-2xl font-semibold text-black w-full text-center">
+					You are already signed in,
+				</h2>
 				<div class="text-lg text-primary font-bold text-center">{email}</div>
 				<div class="text-md text-center">
 					Your shopping list will be synced automatically across all signed in devices :)

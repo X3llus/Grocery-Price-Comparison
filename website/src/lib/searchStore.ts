@@ -1,6 +1,7 @@
 import { writable, get, type Updater } from "svelte/store";
 import { db, doc, updateDoc, onAuthStateChanged, getAuth } from '$lib/firebase.js';
 import { browser } from "$app/environment";
+import { debounce } from "lodash-es";
 
 export const searchStore = writable([]);
 
@@ -16,13 +17,16 @@ function createSearchListStore() {
         }
     });
 
-
     function updateFirestore() {
+        console.log('updateFirestore');
+
         const userRef = doc(db, "Users", uid);
         updateDoc(userRef, {
             list: get(searchListStore),
         });
     }
+
+    const debouncedUpdateFirestore = debounce(updateFirestore, 500);
 
     return {
         subscribe,
@@ -30,7 +34,7 @@ function createSearchListStore() {
         update,
         add: (updater: Updater<any[]>) => {
             update(updater);
-            updateFirestore();
+            debouncedUpdateFirestore();
         },
     }
 }
