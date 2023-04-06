@@ -1,21 +1,20 @@
-<script>
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import Magnify from 'svelte-material-icons/Magnify.svelte';
-	import ListBox from 'svelte-material-icons/ListBox.svelte';
-	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
-	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
-	import Account from 'svelte-material-icons/Account.svelte';
-	import Delete from 'svelte-material-icons/Delete.svelte';
-	import { Modal, StoreMap } from '$lib/components';
-	import { userLocation, updateUserLocation, searchRadius } from '$lib/stores';
-	import algoliasearch from 'algoliasearch/lite';
-	import { goto } from '$app/navigation';
-	import { searchListStore, searchStore } from '$lib/searchStore';
-	import { CartCard } from '$lib/components';
-	import { correctInvalidUnits } from '$lib/utils';
-	import { get } from 'svelte/store';
+<script lang="ts">
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { CartCard, Modal, StoreMap } from '$lib/components';
+	import { searchListStore, searchStore } from '$lib/searchStore';
+	import { searchRadius, updateUserLocation, userLocation } from '$lib/stores';
+	import type { Hit } from '$lib/types';
+	import { correctInvalidUnits } from '$lib/utils';
+	import algoliasearch from 'algoliasearch/lite';
+	import { onMount } from 'svelte';
+	import Account from 'svelte-material-icons/Account.svelte';
+	import Arrow from 'svelte-material-icons/ArrowRight.svelte';
+	import Delete from 'svelte-material-icons/Delete.svelte';
+	import ListBox from 'svelte-material-icons/ListBox.svelte';
+	import Magnify from 'svelte-material-icons/Magnify.svelte';
+	import MapMarker from 'svelte-material-icons/MapMarker.svelte';
 
 	$: q = $page.url.searchParams.get('q') || '';
 
@@ -34,9 +33,8 @@
 		await updateUserLocation();
 		if (q) {
 			search = q;
-			searchItems();
+			await searchItems();
 		}
-		console.log(get(searchListStore));
 	});
 
 	const toggleLocationModal = () => {
@@ -44,15 +42,15 @@
 	};
 
 	async function searchItems() {
-		let hits = await index.search(search + ' ', {
+		let hits = await index.search<Hit>(search + ' ', {
 			hitsPerPage: 30,
 			aroundLatLng: `${$userLocation.latitude}, ${$userLocation.longitude}`,
 			aroundRadius: $searchRadius * 1000,
 		});
 
 		if (typeof hits.hits == 'object') {
-			hits.hits = [hits.hits];
-			const correctedHits = correctInvalidUnits(hits.hits[0]);
+			const hitsArr = [hits.hits];
+			const correctedHits = correctInvalidUnits(hitsArr[0]);
 			searchStore.set(correctedHits);
 		} else {
 			const correctedHits = correctInvalidUnits(hits.hits);
@@ -197,10 +195,19 @@
 	<slot />
 </div>
 
-<button
-	class="fixed bottom-4 right-4 rounded-full bg-primary w-12 h-12 flex justify-center items-center"
-	on:click={() => (sideOpen = !sideOpen)}
-	aria-label="Cart"
->
-	<ListBox color={'white'} width={24} height={24} />
-</button>
+<div class="fixed bottom-4 right-4">
+	<button
+		class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-full bg-primary w-12 h-12 flex justify-center items-center hover:bg-primary-hover"
+		on:click={() => (sideOpen = !sideOpen)}
+		aria-label="Cart"
+	>
+		<ListBox color={'white'} width={24} height={24} />
+		{#if Array.isArray($searchListStore) && $searchListStore.length > 0}
+			<div
+				class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"
+			>
+				{$searchListStore.reduce((acc, curr) => acc + curr.quanity, 0)}
+			</div>
+		{/if}
+	</button>
+</div>

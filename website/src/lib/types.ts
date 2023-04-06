@@ -32,7 +32,7 @@ export type GeoPoint = {
 
 export type ShortGeoPoint = {
   lat: number
-  lon: number
+  lng: number
 }
 
 export type StoreAddress = {
@@ -73,4 +73,17 @@ export interface Hit extends Record<string, any> {
   unit: string
 }
 
+export interface Location {
+  latitude: number;
+  longitude: number;
+  city?: string;
+  province?: string;
+}
+
+export interface ReverseGeocodeResponse {
+  city: string;
+  province: string;
+}
+
 export { }
+
