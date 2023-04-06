@@ -102,7 +102,7 @@
 								: 'text-rich-black font-medium'} text-md capitalize truncate"
 						>
 							{data.storeName}
-							<button
+							<!-- <button
 								on:focus={() => (activePricePopover = x)}
 								on:mouseover={() => (activePricePopover = x)}
 								type="button"
@@ -121,14 +121,14 @@
 									/>
 								</svg>
 								<span class="sr-only">Show information</span>
-							</button>
+							</button> -->
 						</h3>
-						<div
+						<!-- <div
 							id="popover-description"
 							role="tooltip"
 							on:mouseleave={() => (activePricePopover = null)}
 							class="{activePricePopover === x
-								? 'visible'
+								? 'visible delay-300'
 								: 'invisible'} absolute z-10 inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
 						>
 							<div class="p-3 space-y-1">
@@ -142,7 +142,7 @@
 								</p>
 							</div>
 							<div data-popper-arrow />
-						</div>
+						</div> -->
 
 						<h3
 							class="{x === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium'} text-md"
