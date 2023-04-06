@@ -30,6 +30,7 @@
 			searchListStore.add(updateList);
 		}
 	}
+
 </script>
 
 <svelte:head>
