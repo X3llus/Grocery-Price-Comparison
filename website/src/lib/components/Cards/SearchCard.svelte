@@ -152,7 +152,7 @@
 							<h3
 								class="{x === 0 ? 'text-primary font-bold' : 'text-rich-black font-medium'} text-base"
 							>
-								${data.price}
+								${data.price.toFixed(2)}
 							</h3>
 						</div>
 					{/if}

@@ -8,18 +8,18 @@
 
 </script>
 
-<li class="pt-3 bg-white rounded-md shadow-md overflow-hidden">
-    <div class="flex">
+<li class="bg-white rounded-md shadow-md overflow-hidden">
+    <div class="flex p-2">
         <img class="w-16 h-16" src={item.imageUrl ? item.imageUrl : "/productHolder.png"} alt="" />
-        <div class="flex flex-col flex-1 pl-3 w-0">
+        <div class="flex flex-col flex-1 pl-2 w-0">
             <span class="text-sm font-medium truncate text-primary hover:text-black" title="{item.name}">{item.name}</span>
             <div class="flex justify-between">
                 <span class="text-sm font-medium capitalize">{item.best[0].storeName}</span>
-                <span class="text-sm font-medium">${item.best[0].price}</span>
+                <span class="text-sm font-medium">${item.best[0].price.toFixed(2)}</span>
             </div>
         </div>
         <button
-            class="rounded-full w-10 h-10 flex justify-center"
+            class="rounded-full w-10 h-10 flex justify-end"
             aria-label="Remove from cart"
             on:click={() => {
                 searchListStore.add((value) => {
