@@ -177,20 +177,20 @@
 					</h2>
 					<div class="w-3/4 mx-auto">
 						{#each faq as q, i}
-							<div class="flex justify-between items-center">
-								<h3 class="text-3xl p-5 font-sans font-medium text-background text-left">
+							<button
+								class="flex justify-between items-center w-full p-5"
+								type="button"
+								on:click={() => handleClick(q.question)}
+							>
+								<h3 class="text-3xl font-sans font-medium text-background text-left">
 									{q.question}
 								</h3>
 								{#if showContent === q.question}
-									<button type="button" on:click={() => handleClick(q.question)}
-										><ArrowUp color={'white'} width={40} height={40} /></button
-									>
+									<ArrowUp color={'white'} width={40} height={40} />
 								{:else}
-									<button type="button" on:click={() => handleClick(q.question)}
-										><ArrowDown color={'white'} width={40} height={40} /></button
-									>
+									<ArrowDown color={'white'} width={40} height={40} />
 								{/if}
-							</div>
+							</button>
 							{#if showContent === q.question}
 								<p
 									transition:slide={{ duration: 300 }}
@@ -200,7 +200,7 @@
 								</p>
 							{/if}
 							{#if i < faq.length - 1}
-								<div class="p-0.5 bg-white" />
+								<div class="p-[1px] bg-slate-400" />
 							{/if}
 						{/each}
 					</div>
