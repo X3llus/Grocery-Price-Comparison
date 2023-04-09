@@ -200,7 +200,7 @@
 								</p>
 							{/if}
 							{#if i < faq.length - 1}
-								<div class="p-[1px] bg-slate-400" />
+								<div class="p-[1px] bg-white" />
 							{/if}
 						{/each}
 					</div>
