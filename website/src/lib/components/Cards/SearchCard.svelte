@@ -76,7 +76,7 @@
 				{hit.name}
 			</h2>
 			<h2
-				class="truncate text-secondary text-sm font-sans font-bold"
+				class="truncate text-secondary text-sm font-sans font-bold capitalize"
 				data-tooltip-target="title"
 				data-tooltip-placement="bottom"
 			>
