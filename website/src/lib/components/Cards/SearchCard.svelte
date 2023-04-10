@@ -75,17 +75,17 @@
 			>
 				{hit.name}
 			</h2>
+			<h2
+				class="truncate text-secondary text-sm font-sans font-bold"
+				data-tooltip-target="title"
+				data-tooltip-placement="bottom"
+			>
 			{#if hit.brand}
-				<h2
-					class="truncate text-secondary text-sm font-sans font-bold"
-					data-tooltip-target="title"
-					data-tooltip-placement="bottom"
-				>
-					{hit.brand}
-				</h2>
+				{hit.brand}
 			{:else}
-				<div class="pt-5"/>
+				{hit.data[0].storeName}
 			{/if}
+			</h2>
 			{#if hit.size}
 				<div class="p-1">
 					<div class="flex justify-between">
