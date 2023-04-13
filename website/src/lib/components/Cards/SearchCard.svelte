@@ -2,6 +2,8 @@
 	import { searchRadius, userLocation } from '$lib/stores';
 	import type { Hit, StorePrice } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
+	import Star from 'svelte-material-icons/Star.svelte'
+	import StarOut from 'svelte-material-icons/StarOutline.svelte'
 
 	export let hit: Hit;
 	export let i: number;
@@ -59,13 +61,25 @@
 		best = data[0];
 		return data;
 	}
+
+	let favourite = false;
 </script>
 
 <div
 	class="w-full border rounded-md shadow-lg overflow-hidden group bg-white flex flex-col justify-between"
 >
 	<div>
-		<img src={hit.imageUrl ? hit.imageUrl : '/productHolder.png'} alt={hit.name} class="w-full p-2" />
+		<div class="relative">
+			<img src={hit.imageUrl ? hit.imageUrl : '/productHolder.png'} alt={hit.name} class="w-full p-2" />
+			<button class="absolute top-1 right-1 trasition ease-in-out delay-100 duration-100 hover:scale-110" type="button" 
+			on:click="{() => favourite = !favourite}">
+				{#if favourite}
+					<Star color={'orange'} width={40} height={40}/>
+				{:else}
+					<StarOut color={'orange'} width={40} height={40}/>
+				{/if}
+			</button>
+		</div>
 		<div class="px-5">
 			<h2
 				class="truncate text-primary text-xl font-sans font-medium hover:text-black"
