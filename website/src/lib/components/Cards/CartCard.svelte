@@ -14,8 +14,8 @@
         <div class="flex flex-col flex-1 pl-2 w-0">
             <span class="text-sm font-medium truncate text-primary hover:text-black" title="{item.name}">{item.name}</span>
             <div class="flex justify-between">
-                <span class="text-sm font-medium capitalize">{item.best[0].storeName}</span>
-                <span class="text-sm font-medium">${item.best[0].price.toFixed(2)}</span>
+                <span class="text-sm font-medium capitalize">{item.best[0] ? item.best[0].storeName : item.data[0].storeName}</span>
+                <span class="text-sm font-medium">${item.best[0] ? item.best[0].price.toFixed(2) : item.data[0].price.toFixed(2)}</span>
             </div>
         </div>
         <button
